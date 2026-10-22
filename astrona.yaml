@@ -1,0 +1,343 @@
+# Course manifest for ATS115 - Access Control Policies, Leases & Audit Devices (OpenBao).
+#
+# One entry per section under `modules:`. Each section lists, in order: its
+# README, then for each module the landing page (course.md), its parts
+# (course-0N-*.md), and right after the part a lab tests, the lab's
+# question.md reading and the `type: lab` entry. The module's summary page
+# comes last. The section capstone closes the section. Playgrounds are not
+# listed: the landing page's playground marker shows them. solution.md is
+# never listed.
+#
+# Every `path:` is relative to this file.
+
+training:
+  id: ATS115
+  title: "OpenBao: Access Control Policies, Leases & Audit Devices"
+  maturity: draft
+  description: >
+    Training material covering the Access Control Policies, Leases & Audit
+    Devices domain of the OpenBao training path: path-based policies and
+    capabilities, matching rules and deny, parameter constraints, templated
+    policies from identity, control groups that need a second person's
+    approval, response wrapping, leases and revocation trees, and file,
+    socket and declarative audit devices. Each module pairs a layered reader
+    with an ungraded hands-on playground and a graded practice lab. Each
+    section closes with an integration capstone.
+    Written for OpenBao v2.7.1.
+
+  certification:
+    name: OpenBao
+    code: OPENBAO
+    provider: Astrona
+    domain: Access Control Policies, Leases & Audit Devices
+    weight: 15
+
+modules:
+
+  - id: module-intro
+    title: "Introduction"
+    description: >
+      Start here. What this course trains you to do, how it is laid out, how
+      to get your machine ready with the astrona command-line tool, how the
+      content is written and checked, who maintains it, and how to report a
+      mistake.
+
+    content:
+      - type: reading
+        title: Introduction
+        path: sections/intro/README.md
+      - type: reading
+        title: "Welcome To The Course"
+        path: sections/intro/course-01-welcome.md
+      - type: reading
+        title: "Get Your Machine Ready"
+        path: sections/intro/course-02-get-your-machine-ready.md
+      - type: reading
+        title: "How This Course Is Made"
+        path: sections/intro/course-03-how-this-course-is-made.md
+
+  - id: module-010
+    title: "Writing Policies"
+    description: >
+      Path rules and capabilities, how OpenBao picks the rule that applies to
+      a request, deny, parameter constraints, and testing a policy with real
+      tokens before an application depends on it.
+
+    content:
+      - type: reading
+        title: Section Overview
+        path: sections/section-010/README.md
+
+      - type: reading
+        title: "Write Least-Privilege Policies"
+        path: sections/section-010/module-01/course.md
+      - type: reading
+        title: "Paths And Capabilities"
+        path: sections/section-010/module-01/course-01-paths-and-capabilities.md
+      - type: reading
+        title: "How OpenBao Matches A Request To A Rule"
+        path: sections/section-010/module-01/course-02-matching-rules-and-deny.md
+      - type: reading
+        title: "Testing Policies And Reading A Permission Denied"
+        path: sections/section-010/module-01/course-03-testing-and-debugging-policies.md
+      - type: reading
+        title: Question
+        path: sections/section-010/module-01/labs/lab-01/question.md
+      - type: lab
+        title: "Fix The Inventory Application Policy Lab"
+        path: sections/section-010/module-01/labs/lab-01
+        difficulty: beginner
+        estimated_duration: 15m
+        topic: policies
+        task_kind: troubleshooting
+        tags: [acl-policy, capabilities, kv-v2, glob-path, token-capabilities]
+        learning_goals:
+          - Find why a policy written for KV version 1 paths refuses every read on a KV version 2 mount
+          - Grant only read on the data paths and list on the metadata paths
+          - Prove the policy with a fresh token that can read but not write, delete or leave its area
+        resources:
+          - name: "Policies"
+            url: https://openbao.org/docs/concepts/policies/
+          - name: "KV secrets engine version 2"
+            url: https://openbao.org/docs/secrets/kv/kv-v2/
+      - type: reading
+        title: Summary
+        path: sections/section-010/module-01/course-04-summary.md
+
+      - type: reading
+        title: Question
+        path: sections/section-010/capstone/labs/lab-01/question.md
+      - type: lab
+        title: "Repair Policies That Deny Or Allow Too Much Capstone"
+        path: sections/section-010/capstone/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 30m
+        topic: policies
+        task_kind: troubleshooting
+        tags: [acl-policy, deny, plus-segment, glob-path, capabilities, kv-v2]
+        learning_goals:
+          - Find which rule wins for a request when several rules and a deny match
+          - Use a plus segment where a glob in the middle of a path does nothing
+          - Shrink an over-broad policy to the one area and capability it needs
+        resources:
+          - name: "Policies: policy syntax and priority"
+            url: https://openbao.org/docs/concepts/policies/
+          - name: "bao token capabilities"
+            url: https://openbao.org/docs/commands/token/capabilities/
+
+  - id: module-020
+    title: "Templated Policies And Control Groups"
+    description: >
+      Policies that adapt to the identity of the caller, policies attached to
+      identity groups, and control groups that hold a request until another
+      person approves it.
+
+    content:
+      - type: reading
+        title: Section Overview
+        path: sections/section-020/README.md
+
+      - type: reading
+        title: "Write Identity-Aware Policies And Control Groups"
+        path: sections/section-020/module-01/course.md
+      - type: reading
+        title: "Templated Policies From Identity"
+        path: sections/section-020/module-01/course-01-templated-policies.md
+      - type: reading
+        title: "Policies On Identity Groups"
+        path: sections/section-020/module-01/course-02-group-policies.md
+      - type: reading
+        title: Question
+        path: sections/section-020/module-01/labs/lab-01/question.md
+      - type: lab
+        title: "Give Every User A Private KV Area Lab"
+        path: sections/section-020/module-01/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 20m
+        topic: templating
+        task_kind: build
+        tags: [templated-policy, identity-entity, identity-group, userpass, kv-v2]
+        learning_goals:
+          - Write one templated policy that gives every user their own KV area
+          - Attach the policy to an identity group instead of every user
+          - Prove with three logins that users reach their own area and not each other's
+        resources:
+          - name: "Policies: templated policies"
+            url: https://openbao.org/docs/concepts/policies/
+          - name: "Identity"
+            url: https://openbao.org/docs/concepts/identity/
+      - type: reading
+        title: "Control Groups: A Second Person Approves"
+        path: sections/section-020/module-01/course-03-control-groups.md
+      - type: reading
+        title: Summary
+        path: sections/section-020/module-01/course-04-summary.md
+
+      - type: reading
+        title: Question
+        path: sections/section-020/capstone/labs/lab-01/question.md
+      - type: lab
+        title: "Make Payroll Reads Need An Approval Capstone"
+        path: sections/section-020/capstone/labs/lab-01
+        difficulty: advanced
+        estimated_duration: 35m
+        topic: control-groups
+        task_kind: troubleshooting
+        tags: [control-group, approval, identity-group, response-wrapping, unwrap, userpass]
+        learning_goals:
+          - Find why a control group never reaches an approver
+          - Attach the controlled policy to the right group and give the approvers group its member
+          - Prove the whole flow from a held request to an approval and an unwrap
+        resources:
+          - name: "Control groups"
+            url: https://openbao.org/docs/concepts/control-groups/
+          - name: "Response wrapping"
+            url: https://openbao.org/docs/concepts/response-wrapping/
+
+  - id: module-030
+    title: "Response Wrapping And Leases"
+    description: >
+      Handing a secret to its consumer in a single-use wrapping token, checking
+      that token before unwrapping it, and controlling how long secrets and
+      tokens live: lease lookup, renewal, targeted revocation and revocation
+      trees.
+
+    content:
+      - type: reading
+        title: Section Overview
+        path: sections/section-030/README.md
+
+      - type: reading
+        title: "Hand Over Secrets Safely And Control Their Lifetime"
+        path: sections/section-030/module-01/course.md
+      - type: reading
+        title: "Response Wrapping"
+        path: sections/section-030/module-01/course-01-response-wrapping.md
+      - type: reading
+        title: "Checking And Unwrapping A Wrapping Token"
+        path: sections/section-030/module-01/course-02-validating-and-unwrapping.md
+      - type: reading
+        title: "Leases, Renewal And Revocation Trees"
+        path: sections/section-030/module-01/course-03-leases-and-revocation.md
+      - type: reading
+        title: Question
+        path: sections/section-030/module-01/labs/lab-01/question.md
+      - type: lab
+        title: "Hand Over An AppRole Secret ID And Revoke One Certificate Lab"
+        path: sections/section-030/module-01/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: response-wrapping
+        task_kind: build
+        tags: [response-wrapping, unwrap, approle, secret-id, lease-revoke, pki-lease]
+        learning_goals:
+          - Check a wrapping token's creation path before unwrapping it
+          - Unwrap an AppRole secret ID once and store it for the application
+          - Revoke the lease of one compromised certificate and leave the others valid
+        resources:
+          - name: "Response wrapping"
+            url: https://openbao.org/docs/concepts/response-wrapping/
+          - name: "Lease, renew, and revoke"
+            url: https://openbao.org/docs/concepts/lease/
+          - name: "AppRole auth method"
+            url: https://openbao.org/docs/auth/approle/
+      - type: reading
+        title: Summary
+        path: sections/section-030/module-01/course-04-summary.md
+
+      - type: reading
+        title: Question
+        path: sections/section-030/capstone/labs/lab-01/question.md
+      - type: lab
+        title: "Contain A Leaked Token Tree Capstone"
+        path: sections/section-030/capstone/labs/lab-01
+        difficulty: advanced
+        estimated_duration: 35m
+        topic: leases
+        task_kind: troubleshooting
+        tags: [revocation-tree, orphan-token, lease, response-wrapping, wrap-ttl, approle]
+        learning_goals:
+          - Revoke a leaked token with every child token and lease it created
+          - Leave an orphan token and its lease untouched
+          - Force wrapped responses with a minimum and maximum wrapping TTL in a policy
+        resources:
+          - name: "Tokens"
+            url: https://openbao.org/docs/concepts/tokens/
+          - name: "Lease, renew, and revoke"
+            url: https://openbao.org/docs/concepts/lease/
+          - name: "Policies: required response wrapping TTLs"
+            url: https://openbao.org/docs/concepts/policies/
+
+  - id: module-040
+    title: "Audit Devices"
+    description: >
+      What an audit device records and how values are hashed, enabling file
+      and socket devices, finding a request with the audit hash, declaring
+      audit devices in the server configuration, and what happens when no
+      device can write.
+
+    content:
+      - type: reading
+        title: Section Overview
+        path: sections/section-040/README.md
+
+      - type: reading
+        title: "Audit Every Request"
+        path: sections/section-040/module-01/course.md
+      - type: reading
+        title: "Audit Devices And The Audit Log Format"
+        path: sections/section-040/module-01/course-01-audit-devices-and-their-format.md
+      - type: reading
+        title: "Enabling File And Socket Audit Devices"
+        path: sections/section-040/module-01/course-02-enabling-file-and-socket-devices.md
+      - type: reading
+        title: Question
+        path: sections/section-040/module-01/labs/lab-01/question.md
+      - type: lab
+        title: "Send Every Request To Two Audit Devices Lab"
+        path: sections/section-040/module-01/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 20m
+        topic: audit
+        task_kind: build
+        tags: [audit-device, file-audit, socket-audit, audit-hash]
+        learning_goals:
+          - Enable a file audit device on the audit volume and a socket device to a TCP listener
+          - Compute a value's audit hash for each device
+          - Prove that both devices recorded the same request
+        resources:
+          - name: "Audit devices"
+            url: https://openbao.org/docs/audit/
+          - name: "File audit device"
+            url: https://openbao.org/docs/audit/file/
+          - name: "Socket audit device"
+            url: https://openbao.org/docs/audit/socket/
+      - type: reading
+        title: "Declarative Audit Devices And Blocked Logging"
+        path: sections/section-040/module-01/course-03-declarative-audit-and-blocking.md
+      - type: reading
+        title: Summary
+        path: sections/section-040/module-01/course-04-summary.md
+
+      - type: reading
+        title: Question
+        path: sections/section-040/capstone/labs/lab-01/question.md
+      - type: lab
+        title: "Move Auditing Into The Server Configuration Capstone"
+        path: sections/section-040/capstone/labs/lab-01
+        difficulty: advanced
+        estimated_duration: 35m
+        topic: audit
+        task_kind: migration
+        tags: [declarative-audit, file-audit, audit-device, audit-hash, helm-values]
+        learning_goals:
+          - Move an API-created audit device into an audit stanza in the server configuration
+          - Turn off creating audit devices through the API
+          - Prove that the declared device records requests after a restart and an unseal
+        resources:
+          - name: "Declarative audit devices"
+            url: https://openbao.org/docs/configuration/audit/
+          - name: "Server configuration"
+            url: https://openbao.org/docs/configuration/
+          - name: "Audit devices"
+            url: https://openbao.org/docs/audit/

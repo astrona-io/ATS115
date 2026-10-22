@@ -1,0 +1,56 @@
+# Fix The Inventory Application Policy
+# Astrona graded lab. Schema: internal/config.LabConfig.
+
+metadata:
+  name: "ats-115-lab-010-01"
+  docs:
+    guide: "solution.md"
+    solution: "solution.md"
+    question: "question.md"
+    examQuestion: "question.md"
+    prerequisites: "prerequisites.md"
+
+bootstrap:
+  init:
+    - name: "install-openbao"
+      description: "Installs Helm, bao, the tester pod and OpenBao v2.7.1, initialized and unsealed"
+      type: "file"
+      source: "bootstrap/01-install-openbao.sh"
+    - name: "ats-115-lab-010-01-setup"
+      description: "Creates the starting state the task works from"
+      type: "file"
+      source: "bootstrap/02-seed-state.sh"
+  manifests:
+    - name: "lab-start"
+      description: "The tester pod (namespace clients)."
+      type: "file"
+      source: "manifests/lab-start.yaml"
+
+testing:
+  init:
+    - name: "wait-for-openbao"
+      description: "Waits until OpenBao answers unsealed from the tester pod"
+      type: "file"
+      source: "testing/wait-for-openbao.sh"
+    - name: "reference-solution"
+      description: "The remediation a correct learner performs; used by `astrona test`"
+      type: "file"
+      source: "solution/apply.sh"
+
+validation:
+  scripts:
+    - name: "validate-reads-inventory"
+      description: "Confirms a token with inventory-app reads both inventory secrets"
+      type: "file"
+      source: "validation/validate-reads-inventory.sh"
+    - name: "validate-lists-inventory"
+      description: "Confirms the policy lists the keys under secret/inventory/"
+      type: "file"
+      source: "validation/validate-lists-inventory.sh"
+    - name: "validate-nothing-more"
+      description: "Confirms the policy cannot write, delete or read other teams' secrets"
+      type: "file"
+      source: "validation/validate-nothing-more.sh"
+
+teardown:
+  keepCluster: false
