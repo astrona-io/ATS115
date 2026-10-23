@@ -168,6 +168,7 @@ path "secret/data/payroll/*" {
         group_names = ["approver"]
         approvals   = 1
       }
+      controlled_capabilities = ["read"]
     }
   }
 }

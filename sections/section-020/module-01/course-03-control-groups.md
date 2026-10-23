@@ -33,7 +33,7 @@ A factor lives inside a path rule. Each factor names identity groups whose membe
 | `identity { group_names = [...] }` | Members of these groups may approve |
 | `approvals` | How many different members must approve |
 | `self_authorization` | Whether the requester may approve their own request; default `false` |
-| `controlled_capabilities` | Only these capabilities need approval; without it, every capability on the path does |
+| `controlled_capabilities` | The capabilities that need approval; OpenBao 2.7 requires it in every factor and refuses a policy without it |
 | `ttl` on the `control_group` | How long the wrapping token and the approval stay valid |
 
 OpenBao's control groups check identity groups only. The capabilities in `controlled_capabilities` must also appear in the rule's own `capabilities` list.
@@ -59,6 +59,7 @@ path "secret/data/payroll/*" {
         group_names = ["approvers"]
         approvals   = 1
       }
+      controlled_capabilities = ["read"]
     }
   }
 }
