@@ -34,18 +34,30 @@ A factor lives inside a path rule. Each factor names identity groups whose membe
 | `approvals` | How many different members must approve |
 | `self_authorization` | Whether the requester may approve their own request; default `false` |
 | `controlled_capabilities` | The capabilities that need approval; OpenBao 2.7 requires it in every factor and refuses a policy without it |
-| `ttl` on the `control_group` | How long the wrapping token and the approval stay valid |
+| `ttl` on the `control_group` | How long the wrapping token and the approval stay valid. OpenBao 2.7 needs it: without a `ttl`, a read returns an empty response instead of a wrapped one |
 
 OpenBao's control groups check identity groups only. The capabilities in `controlled_capabilities` must also appear in the rule's own `capabilities` list.
 
 <!-- astrona:playground:renew -->
 
-Create two groups for the exercise: `payroll` with `dave`, and `approvers` with `carol`. The group commands need entity IDs, which this helper looks up by name:
+Approving a request is itself a request, to `sys/control-group/authorize`, and the `default` policy does not allow it. Members of the approving group need a policy for it. Save this as `approver.hcl`:
+
+```hcl
+path "sys/control-group/request" {
+  capabilities = ["update"]
+}
+path "sys/control-group/authorize" {
+  capabilities = ["update"]
+}
+```
+
+Load it, then create two groups for the exercise: `payroll` with `dave`, and `approvers` with `carol` and the policy `approver`. The group commands need entity IDs, which this helper looks up by name:
 
 ```sh
+bao policy write approver approver.hcl
 entity_id() { bao read -field=id "identity/entity/name/$1"; }
 bao write identity/group name=payroll member_entity_ids="$(entity_id dave)"
-bao write identity/group name=approvers member_entity_ids="$(entity_id carol)"
+bao write identity/group name=approvers policies=approver member_entity_ids="$(entity_id carol)"
 ```
 
 Save this as `payroll-read.hcl`:
@@ -54,6 +66,7 @@ Save this as `payroll-read.hcl`:
 path "secret/data/payroll/*" {
   capabilities = ["read"]
   control_group = {
+    ttl = "4h"
     factor "payroll-approval" {
       identity {
         group_names = ["approvers"]
@@ -111,5 +124,6 @@ You now know how a control group holds a request, who may approve it, and how th
 > [!WARNING]
 > - **A group name in the factor that does not exist.** Nothing checks it when you write the policy. Every request then waits forever. Compare `group_names` with `bao list identity/group/name`.
 > - **An empty approvers group.** Same result: nobody can approve.
+> - **Approvers without a policy for `sys/control-group/authorize`.** The approval is refused with `permission denied`; the `default` policy does not allow it.
 > - **Approving your own request.** With `self_authorization` at its default, `false`, a member of both groups cannot approve their own request; ask another member.
 > - **Expecting a notification.** OpenBao does not tell approvers about pending requests. Send the accessor yourself.

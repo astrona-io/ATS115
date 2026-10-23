@@ -158,11 +158,16 @@ bao_root kv put secret/payroll/salaries alice=5100 bob=4900 >/dev/null
 echo "[seed] Creating the payroll and approvers groups and the payroll-read policy with faults..."
 entity_id() { bao_root read -format=json "identity/entity/name/$1" | jqt '.data.id'; }
 bao_root write identity/group name=payroll member_entity_ids="$(entity_id dave)" >/dev/null
-bao_root write identity/group name=approvers >/dev/null
+# Approving is a request to sys/control-group/authorize, which the default
+# policy does not allow; the approvers group gets a policy for it.
+printf 'path "sys/control-group/request" {\n  capabilities = ["update"]\n}\npath "sys/control-group/authorize" {\n  capabilities = ["update"]\n}\n' \
+  | bao_root policy write approver - >/dev/null
+bao_root write identity/group name=approvers policies=approver >/dev/null
 cat <<'HCL' | bao_root policy write payroll-read - >/dev/null
 path "secret/data/payroll/*" {
   capabilities = ["read"]
   control_group = {
+    ttl = "4h"
     factor "payroll-approval" {
       identity {
         group_names = ["approver"]

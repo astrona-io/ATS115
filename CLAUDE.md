@@ -260,7 +260,14 @@ and no `astrona test` has passed yet. Until a maintainer runs them:
 
 Doubts to check first, most important first:
 
-1. **Control group responses.** `sys/control-group/authorize` with
+1. **Control groups, seen on OpenBao 2.7.1 (2026-10-23).** A factor needs
+   `controlled_capabilities`; the `control_group` block needs `ttl` (the
+   parser reads `ttl` and `self_auth_allowed` at that level, not inside
+   `identity`), or a held read returns `data: null` with no `wrap_info`;
+   approvers need a policy with `update` on `sys/control-group/authorize`
+   (and `.../request`), which `default` lacks. With all three, the read is
+   wrapped, carol approves and dave unwraps the secret.
+   **Control group responses (older notes).** `sys/control-group/authorize` with
    `{"accessor": ...}` is confirmed by `api/system/control-group.mdx` at
    v2.7.1. Still unconfirmed: that a held KV read answers with
    `wrap_info.token` and `wrap_info.accessor`, that unwrapping returns the

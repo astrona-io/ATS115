@@ -30,6 +30,7 @@ Save this as `payroll-read.hcl`:
 path "secret/data/payroll/*" {
   capabilities = ["read"]
   control_group = {
+    ttl = "4h"
     factor "payroll-approval" {
       identity {
         group_names = ["approvers"]

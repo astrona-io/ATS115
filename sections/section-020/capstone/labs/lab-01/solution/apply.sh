@@ -143,6 +143,7 @@ cat <<'HCL' | bao_root policy write payroll-read - >/dev/null
 path "secret/data/payroll/*" {
   capabilities = ["read"]
   control_group = {
+    ttl = "4h"
     factor "payroll-approval" {
       identity {
         group_names = ["approvers"]
