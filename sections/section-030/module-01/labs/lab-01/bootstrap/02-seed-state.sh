@@ -2,6 +2,21 @@
 # Creates the starting state for ats-115-lab-030-01: A wrapped secret ID in the ConfigMap handoff, and three certificates with leases, one of them compromised.
 # The fixed configuration is NOT applied here: producing it is the task.
 set -euo pipefail
+# grep -q stops reading at the first match; under pipefail the command
+# writing into the pipe then fails with SIGPIPE and a match looks like a
+# failure. This wrapper reads all input instead and keeps grep's exit status.
+grep() {
+  local arg quiet=0 args=()
+  for arg in "$@"; do
+    case "$arg" in
+      --quiet|--silent) quiet=1 ;;
+      --*) args+=("$arg") ;;
+      -*q*) quiet=1; [ "$arg" = "-q" ] || args+=("${arg//q/}") ;;
+      *) args+=("$arg") ;;
+    esac
+  done
+  if [ "$quiet" = 1 ]; then command grep "${args[@]}" >/dev/null; else command grep "$@"; fi
+}
 
 # --- shared helpers (ATS115) -------------------------------------------------
 export PATH="/usr/local/bin:$HOME/.local/bin:$PATH"
