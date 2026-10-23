@@ -7,7 +7,6 @@ metadata:
   name: "ats-115-playground-040-01"
   docs:
     guide: "docs/overview.md"
-
 bootstrap:
   init:
     - name: "prepare"
@@ -19,6 +18,11 @@ bootstrap:
       description: "The tester pod (namespace clients) and the audit-sink listener."
       type: "file"
       source: "manifests/lab-start.yaml"
-
 teardown:
   keepCluster: false
+runtime:
+  kind:
+    preloadImages:
+      - alpine/socat:1.8.1.3
+      - nicolaka/netshoot:v0.13
+      - quay.io/openbao/openbao:2.7.1

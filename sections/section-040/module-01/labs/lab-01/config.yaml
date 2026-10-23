@@ -9,7 +9,6 @@ metadata:
     question: "question.md"
     examQuestion: "question.md"
     prerequisites: "prerequisites.md"
-
 bootstrap:
   init:
     - name: "install-openbao"
@@ -25,7 +24,6 @@ bootstrap:
       description: "The tester pod (namespace clients) and the audit-sink listener."
       type: "file"
       source: "manifests/lab-start.yaml"
-
 testing:
   init:
     - name: "wait-for-openbao"
@@ -36,7 +34,6 @@ testing:
       description: "The remediation a correct learner performs; used by `astrona test`"
       type: "file"
       source: "solution/apply.sh"
-
 validation:
   scripts:
     - name: "validate-devices"
@@ -51,6 +48,11 @@ validation:
       description: "Writes a secret and finds its audit hash in the socket listener's output"
       type: "file"
       source: "validation/validate-socket-records.sh"
-
 teardown:
   keepCluster: false
+runtime:
+  kind:
+    preloadImages:
+      - alpine/socat:1.8.1.3
+      - nicolaka/netshoot:v0.13
+      - quay.io/openbao/openbao:2.7.1
