@@ -29,8 +29,6 @@ training:
     name: OpenBao
     code: OPENBAO
     provider: Astrona
-    domain: Access Control Policies, Leases & Audit Devices
-    weight: 15
 
 modules:
 
