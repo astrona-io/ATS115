@@ -1,0 +1,245 @@
+# Knowledge check for section 010. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats115-010
+course_id: ATS115
+exam_code: OPENBAO
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: section
+  id: section-010
+  title: "Writing Policies"
+placement:
+  position: after
+  reading: sections/section-010/module-01/course-03-testing-and-debugging-policies.md
+questions:
+  - id: ats115-010-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain what a policy and a capability are"
+    source_readings:
+      - sections/section-010/module-01/course-01-paths-and-capabilities.md
+    prompt: "A new token has no policy except `default`. What can it do with the secrets in `secret/`?"
+    options:
+      - id: a
+        text: "Nothing, because OpenBao denies every request that no rule allows."
+        explanation: "Correct. Permissions come only from rules in policies."
+      - id: b
+        text: "It can read every secret but not write them."
+        explanation: "Not correct. Reading is not allowed by default."
+      - id: c
+        text: "It can list keys but not read values."
+        explanation: "Not correct. Listing also needs a rule."
+      - id: d
+        text: "It can do everything until a `deny` rule is added."
+        explanation: "Not correct. The default is deny, not allow."
+    correct_option: a
+    explanation: "Correct. Permissions come only from rules in policies."
+
+  - id: ats115-010-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Map API operations to capabilities"
+    source_readings:
+      - sections/section-010/module-01/course-01-paths-and-capabilities.md
+    prompt: "Which capability does a `bao kv list secret/inventory` command need on a KV version 2 mount?"
+    options:
+      - id: a
+        text: "`read` on `secret/data/inventory`."
+        explanation: "Not correct. `read` on `data/` returns one secret, not a key list."
+      - id: b
+        text: "`list` on `secret/metadata/inventory`."
+        explanation: "Correct. Listing uses the `metadata/` path and the `list` capability."
+      - id: c
+        text: "`list` on `secret/data/inventory/*`."
+        explanation: "Not correct. A `list` rule on `data/` does nothing."
+      - id: d
+        text: "`scan` on `secret/inventory`."
+        explanation: "Not correct. `scan` lists recursively and the path misses `metadata/`."
+    correct_option: b
+    explanation: "Correct. Listing uses the `metadata/` path and the `list` capability."
+
+  - id: ats115-010-q03
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Find the API path behind a bao kv command"
+    source_readings:
+      - sections/section-010/module-01/course-01-paths-and-capabilities.md
+    prompt: "You want to see which rule `bao kv get secret/inventory/db` needs, without running it. Which flag does that?"
+    options:
+      - id: a
+        text: "`-dry-run`"
+        explanation: "Not correct. `bao kv get` has no such flag."
+      - id: b
+        text: "`-wrap-ttl`"
+        explanation: "Not correct. That wraps the response in a token."
+      - id: c
+        text: "`-output-policy`"
+        explanation: "Correct. It prints the rule the command would need."
+      - id: d
+        text: "`-field=policy`"
+        explanation: "Not correct. `-field` selects a field of the response."
+    correct_option: c
+    explanation: "Correct. It prints the rule the command would need."
+
+  - id: ats115-010-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Diagnose a policy written for the wrong KV version"
+    source_readings:
+      - sections/section-010/module-01/course-01-paths-and-capabilities.md
+    prompt: "A policy has a rule on `secret/inventory/*` with `read`. Every read on a KV version 2 mount at `secret/` fails. Why?"
+    options:
+      - id: a
+        text: "`read` is not a valid capability for KV."
+        explanation: "Not correct. `read` is valid."
+      - id: b
+        text: "A glob must be in the middle of the path."
+        explanation: "Not correct. A glob works only at the end."
+      - id: c
+        text: "The token needs the `root` policy to read KV."
+        explanation: "Not correct. A rule on the right path is enough."
+      - id: d
+        text: "The real API path is `secret/data/inventory/...`, which the rule does not match."
+        explanation: "Correct. The `bao kv` command adds `data/`, but a policy does not."
+    correct_option: d
+    explanation: "Correct. The `bao kv` command adds `data/`, but a policy does not."
+
+  - id: ats115-010-q05
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Describe globs and the plus segment"
+    source_readings:
+      - sections/section-010/module-01/course-02-matching-rules-and-deny.md
+    prompt: "What does `+` match in `secret/data/+/reports`?"
+    options:
+      - id: a
+        text: "Any text, including slashes, after that point."
+        explanation: "Not correct. That describes a glob `*` at the end of a path."
+      - id: b
+        text: "Exactly one path segment between two slashes."
+        explanation: "Correct. `secret/data/inventory/reports` matches; `secret/data/a/b/reports` does not."
+      - id: c
+        text: "Zero or more segments."
+        explanation: "Not correct. `+` always matches one segment."
+      - id: d
+        text: "Only a segment named `plus`."
+        explanation: "Not correct. `+` is a wildcard, not a name."
+    correct_option: b
+    explanation: "Correct. `secret/data/inventory/reports` matches; `secret/data/a/b/reports` does not."
+
+  - id: ats115-010-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Predict which rule wins"
+    source_readings:
+      - sections/section-010/module-01/course-02-matching-rules-and-deny.md
+    prompt: "A token has `secret/data/billing/*` with `read` and `secret/data/billing/admin` with `deny`. What happens on a read of `secret/data/billing/admin`?"
+    options:
+      - id: a
+        text: "It succeeds, because the glob allows `read`."
+        explanation: "Not correct. The glob has lower priority than the exact path."
+      - id: b
+        text: "It succeeds, because capabilities add up."
+        explanation: "Not correct. OpenBao does not add capabilities of different patterns."
+      - id: c
+        text: "It is refused, because the exact path has higher priority and its capability is `deny`."
+        explanation: "Correct. Only the highest-priority matching rule counts."
+      - id: d
+        text: "It is refused only if the token also has `sudo`."
+        explanation: "Not correct. `deny` needs no other capability."
+    correct_option: c
+    explanation: "Correct. Only the highest-priority matching rule counts."
+
+  - id: ats115-010-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Spot a rule that matches too much"
+    source_readings:
+      - sections/section-010/module-01/course-02-matching-rules-and-deny.md
+    prompt: "A rule uses the path `secret/data/inv*` to cover the `inventory` folder. What is the problem?"
+    options:
+      - id: a
+        text: "A glob is not allowed at the end of a path."
+        explanation: "Not correct. A glob is allowed only at the end."
+      - id: b
+        text: "It matches nothing, because `inv` is not a folder."
+        explanation: "Not correct. A glob matches any text that starts with the prefix."
+      - id: c
+        text: "It matches only `secret/data/inv`."
+        explanation: "Not correct. Globs match longer paths too."
+      - id: d
+        text: "It also matches `secret/data/invoices`, because the glob matches every path that starts with `inv`."
+        explanation: "Correct. End the prefix with a slash: `secret/data/inventory/*`."
+    correct_option: d
+    explanation: "Correct. End the prefix with a slash: `secret/data/inventory/*`."
+
+  - id: ats115-010-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose the right wildcard"
+    source_readings:
+      - sections/section-010/module-01/course-02-matching-rules-and-deny.md
+    prompt: "A team wrote `secret/data/*/reports` and gets `permission denied` on `secret/data/inventory/reports`. What is the fix?"
+    options:
+      - id: a
+        text: "Use `secret/data/+/reports`, because `*` is a glob only at the end of a path."
+        explanation: "Correct. `+` matches one segment anywhere in the path."
+      - id: b
+        text: "Add `update` to the capabilities."
+        explanation: "Not correct. The rule does not match the path at all."
+      - id: c
+        text: "Use `secret/data/**/reports`."
+        explanation: "Not correct. `**` is not a wildcard in OpenBao policies."
+      - id: d
+        text: "Attach the `root` policy."
+        explanation: "Not correct. That gives far too much access."
+    correct_option: a
+    explanation: "Correct. `+` matches one segment anywhere in the path."
+
+  - id: ats115-010-q09
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Test a policy with a token"
+    source_readings:
+      - sections/section-010/module-01/course-03-testing-and-debugging-policies.md
+    prompt: "Which command prints what a token may do on one API path, after all matching and priority rules?"
+    options:
+      - id: a
+        text: "`bao policy read <name>`"
+        explanation: "Not correct. That prints the stored policy text, not a token's result."
+      - id: b
+        text: "`bao token lookup <token>`"
+        explanation: "Not correct. That shows token fields such as `policies`, not capabilities per path."
+      - id: c
+        text: "`bao token capabilities <token> <path>`"
+        explanation: "Correct. It returns the capabilities for that token and path."
+      - id: d
+        text: "`bao policy list`"
+        explanation: "Not correct. That lists policy names only."
+    correct_option: c
+    explanation: "Correct. It returns the capabilities for that token and path."
+
+  - id: ats115-010-q10
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Use parameter constraints"
+    source_readings:
+      - sections/section-010/module-01/course-03-testing-and-debugging-policies.md
+    prompt: "A help desk policy has `allowed_parameters = { \"password\" = [] }` on `auth/userpass/users/*`. What happens when the help desk writes `token_policies=root` to a user?"
+    options:
+      - id: a
+        text: "It succeeds, because the rule has `update`."
+        explanation: "Not correct. Parameter constraints limit the fields."
+      - id: b
+        text: "It succeeds, because an empty list allows every field."
+        explanation: "Not correct. The empty list means any value for `password` only."
+      - id: c
+        text: "It succeeds but the policy is ignored."
+        explanation: "Not correct. Constraints are enforced on this API."
+      - id: d
+        text: "The request is refused, because `token_policies` is not an allowed parameter."
+        explanation: "Correct. Only the `password` field is accepted."
+    correct_option: d
+    explanation: "Correct. Only the `password` field is accepted."

@@ -1,0 +1,245 @@
+# Knowledge check for section 020. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats115-020
+course_id: ATS115
+exam_code: OPENBAO
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: section
+  id: section-020
+  title: "Templated Policies And Control Groups"
+placement:
+  position: after
+  reading: sections/section-020/module-01/course-03-control-groups.md
+questions:
+  - id: ats115-020-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain templated policies"
+    source_readings:
+      - sections/section-020/module-01/course-01-templated-policies.md
+    prompt: "What does the placeholder `{{identity.entity.name}}` in a policy path do?"
+    options:
+      - id: a
+        text: "It is replaced once, when the policy is written."
+        explanation: "Not correct. OpenBao fills it in on each request."
+      - id: b
+        text: "OpenBao replaces it with the name of the caller's identity entity on each request."
+        explanation: "Correct. One policy then gives every entity its own path."
+      - id: c
+        text: "It is replaced with the name of the policy."
+        explanation: "Not correct. It uses the caller's entity."
+      - id: d
+        text: "It is replaced with the userpass password."
+        explanation: "Not correct. Passwords are never used in templates."
+    correct_option: b
+    explanation: "Correct. One policy then gives every entity its own path."
+
+  - id: ats115-020-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Describe how a login becomes an entity"
+    source_readings:
+      - sections/section-020/module-01/course-01-templated-policies.md
+    prompt: "What links a userpass login of `alice` to an identity entity?"
+    options:
+      - id: a
+        text: "The token policy list."
+        explanation: "Not correct. Policies do not link a login to an entity."
+      - id: b
+        text: "The wrapping token of the login."
+        explanation: "Not correct. Logins do not use wrapping tokens."
+      - id: c
+        text: "An alias that says the user name `alice` on that mount belongs to the entity."
+        explanation: "Correct. The token then carries the entity ID."
+      - id: d
+        text: "The audit device path."
+        explanation: "Not correct. Audit devices only record requests."
+    correct_option: c
+    explanation: "Correct. The token then carries the entity ID."
+
+  - id: ats115-020-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Avoid template pitfalls"
+    source_readings:
+      - sections/section-020/module-01/course-01-templated-policies.md
+    prompt: "A templated policy has a rule for `secret/data/users/{{identity.entity.name}}/*` only. What can a user not do?"
+    options:
+      - id: a
+        text: "Read their own secrets."
+        explanation: "Not correct. The rule covers the `data/` path."
+      - id: b
+        text: "Write their own secrets."
+        explanation: "Not correct. That depends on capabilities, and `data/` is covered."
+      - id: c
+        text: "Log in."
+        explanation: "Not correct. Login does not depend on this policy."
+      - id: d
+        text: "List their own folder, because listing needs a rule on the `metadata/` path."
+        explanation: "Correct. Add a `list` rule on `secret/metadata/users/{{identity.entity.name}}/*`."
+    correct_option: d
+    explanation: "Correct. Add a `list` rule on `secret/metadata/users/{{identity.entity.name}}/*`."
+
+  - id: ats115-020-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Test templated policies correctly"
+    source_readings:
+      - sections/section-020/module-01/course-01-templated-policies.md
+    prompt: "Why must you test a templated policy with each user's own token and not the root token?"
+    options:
+      - id: a
+        text: "The root policy allows everything, so the template is never tested."
+        explanation: "Correct. A test with root always passes."
+      - id: b
+        text: "The root token cannot read KV."
+        explanation: "Not correct. Root can read KV."
+      - id: c
+        text: "Templates only work for root."
+        explanation: "Not correct. Templates work for entity tokens."
+      - id: d
+        text: "The root token has no entity ID, so requests fail."
+        explanation: "Not correct. Root requests succeed."
+    correct_option: a
+    explanation: "Correct. A test with root always passes."
+
+  - id: ats115-020-q05
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Compare token policies and identity policies"
+    source_readings:
+      - sections/section-020/module-01/course-02-group-policies.md
+    prompt: "On `bao token lookup`, where do the policies of an identity group appear?"
+    options:
+      - id: a
+        text: "In the `policies` field."
+        explanation: "Not correct. That field holds the token policies."
+      - id: b
+        text: "In the `identity_policies` field."
+        explanation: "Correct. The `policies` field holds only token policies."
+      - id: c
+        text: "In the `meta` field."
+        explanation: "Not correct. That holds metadata."
+      - id: d
+        text: "They never appear."
+        explanation: "Not correct. They appear in `identity_policies`."
+    correct_option: b
+    explanation: "Correct. The `policies` field holds only token policies."
+
+  - id: ats115-020-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Predict when group changes apply"
+    source_readings:
+      - sections/section-020/module-01/course-02-group-policies.md
+    prompt: "You attach a policy to the group `staff`. `dave` is a member and has an existing token. When does he get the policy?"
+    options:
+      - id: a
+        text: "Only after he logs in again."
+        explanation: "Not correct. That applies to `token_policies`."
+      - id: b
+        text: "Only after the token is revoked."
+        explanation: "Not correct. Revoking is not needed."
+      - id: c
+        text: "Only after the server restarts."
+        explanation: "Not correct. No restart is needed."
+      - id: d
+        text: "On his next request, with the same token."
+        explanation: "Correct. OpenBao looks up identity policies on every request."
+    correct_option: d
+    explanation: "Correct. OpenBao looks up identity policies on every request."
+
+  - id: ats115-020-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose where to attach a policy"
+    source_readings:
+      - sections/section-020/module-01/course-02-group-policies.md
+    prompt: "Which place suits access for people whose rights change with team membership?"
+    options:
+      - id: a
+        text: "An identity group's `policies`."
+        explanation: "Correct. Adding or removing a member is one change, and it takes effect at once."
+      - id: b
+        text: "`token_policies` on each user."
+        explanation: "Not correct. It applies from the next login and must be set per user."
+      - id: c
+        text: "The `default` policy."
+        explanation: "Not correct. That policy applies to almost every token."
+      - id: d
+        text: "A root token for each person."
+        explanation: "Not correct. That gives full access."
+    correct_option: a
+    explanation: "Correct. Adding or removing a member is one change, and it takes effect at once."
+
+  - id: ats115-020-q08
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Understand revocation after group removal"
+    source_readings:
+      - sections/section-020/module-01/course-02-group-policies.md
+    prompt: "You remove a person from a group. Their old token still reads secrets that were granted by their user's `token_policies`. Why?"
+    options:
+      - id: a
+        text: "Group removal takes an hour to apply."
+        explanation: "Not correct. It applies on the next request."
+      - id: b
+        text: "OpenBao caches the group for the token TTL."
+        explanation: "Not correct. Identity policies are looked up on every request."
+      - id: c
+        text: "Group policies end at once, but token policies stay until the token is revoked or expires."
+        explanation: "Correct. Revoke the old tokens too."
+      - id: d
+        text: "Removal only works for root tokens."
+        explanation: "Not correct. It works for any member."
+    correct_option: c
+    explanation: "Correct. Revoke the old tokens too."
+
+  - id: ats115-020-q09
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Describe the control group flow"
+    source_readings:
+      - sections/section-020/module-01/course-03-control-groups.md
+    prompt: "What does OpenBao return when `dave` reads a path that has a control group factor?"
+    options:
+      - id: a
+        text: "The secret, with a warning."
+        explanation: "Not correct. The request is held."
+      - id: b
+        text: "A wrapping token and its accessor, not the secret."
+        explanation: "Correct. The secret leaves OpenBao only when `dave` unwraps the token after approval."
+      - id: c
+        text: "A `403` with the name of the missing approver."
+        explanation: "Not correct. The request is held, not refused."
+      - id: d
+        text: "A notification sent to the approvers."
+        explanation: "Not correct. OpenBao does not notify anybody."
+    correct_option: b
+    explanation: "Correct. The secret leaves OpenBao only when `dave` unwraps the token after approval."
+
+  - id: ats115-020-q10
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Prepare approvers"
+    source_readings:
+      - sections/section-020/module-01/course-03-control-groups.md
+    prompt: "Approvers get `permission denied` when they call `sys/control-group/authorize`. What is missing?"
+    options:
+      - id: a
+        text: "The `sudo` capability on the secret path."
+        explanation: "Not correct. Approval is a request to the authorize path."
+      - id: b
+        text: "A longer `ttl` on the control group."
+        explanation: "Not correct. TTL does not change permissions."
+      - id: c
+        text: "A second wrapping token."
+        explanation: "Not correct. The accessor identifies the request."
+      - id: d
+        text: "A policy with `update` on `sys/control-group/authorize` for the approvers group."
+        explanation: "Correct. The `default` policy does not allow it."
+    correct_option: d
+    explanation: "Correct. The `default` policy does not allow it."

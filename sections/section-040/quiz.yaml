@@ -1,0 +1,245 @@
+# Knowledge check for section 040. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats115-040
+course_id: ATS115
+exam_code: OPENBAO
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: section
+  id: section-040
+  title: "Audit Devices"
+placement:
+  position: after
+  reading: sections/section-040/module-01/course-03-declarative-audit-and-blocking.md
+questions:
+  - id: ats115-040-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Describe audit log entries"
+    source_readings:
+      - sections/section-040/module-01/course-01-audit-devices-and-their-format.md
+    prompt: "How does OpenBao write a request to an audit device?"
+    options:
+      - id: a
+        text: "As one plain text line."
+        explanation: "Not correct. Entries are JSON objects."
+      - id: b
+        text: "Only as a response entry."
+        explanation: "Not correct. Both are written."
+      - id: c
+        text: "As two JSON objects, a request entry and a response entry, with the same request ID."
+        explanation: "Correct. The shared ID lets you match them."
+      - id: d
+        text: "As a binary snapshot."
+        explanation: "Not correct. Entries are JSON lines."
+    correct_option: c
+    explanation: "Correct. The shared ID lets you match them."
+
+  - id: ats115-040-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain hashing in the audit log"
+    source_readings:
+      - sections/section-040/module-01/course-01-audit-devices-and-their-format.md
+    prompt: "A password in an audit entry appears as `hmac-sha256:...`. Why?"
+    options:
+      - id: a
+        text: "The password was encrypted with the unseal key."
+        explanation: "Not correct. It is a keyed hash, not encryption."
+      - id: b
+        text: "The client sent it hashed."
+        explanation: "Not correct. OpenBao hashes it."
+      - id: c
+        text: "The device was misconfigured."
+        explanation: "Not correct. This is normal behaviour."
+      - id: d
+        text: "OpenBao hashes most strings with HMAC-SHA256 so secrets do not appear in the log."
+        explanation: "Correct. The salt belongs to that audit device."
+    correct_option: d
+    explanation: "Correct. The salt belongs to that audit device."
+
+  - id: ats115-040-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Find a value in a hashed log"
+    source_readings:
+      - sections/section-040/module-01/course-01-audit-devices-and-their-format.md
+    prompt: "You know a secret value and want to find it in an audit log. What do you do?"
+    options:
+      - id: a
+        text: "Ask `sys/audit-hash/<device path>` to hash it, then search the log for that hash."
+        explanation: "Correct. The hash uses that device's salt."
+      - id: b
+        text: "Search the log for the clear text value."
+        explanation: "Not correct. It is not in the log."
+      - id: c
+        text: "Reverse the hash with the unseal key."
+        explanation: "Not correct. The hash cannot be reversed."
+      - id: d
+        text: "Disable and re-enable the device."
+        explanation: "Not correct. That gives a new salt."
+    correct_option: a
+    explanation: "Correct. The hash uses that device's salt."
+
+  - id: ats115-040-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Know what is not audited"
+    source_readings:
+      - sections/section-040/module-01/course-01-audit-devices-and-their-format.md
+    prompt: "Which operations leave no trace in the audit log?"
+    options:
+      - id: a
+        text: "Reads of KV secrets."
+        explanation: "Not correct. Those are recorded."
+      - id: b
+        text: "Seal and unseal, for example `sys/seal` and `sys/unseal`."
+        explanation: "Correct. Use the server log and monitoring for them."
+      - id: c
+        text: "Policy writes."
+        explanation: "Not correct. Those are recorded."
+      - id: d
+        text: "Logins."
+        explanation: "Not correct. Those are recorded."
+    correct_option: b
+    explanation: "Correct. Use the server log and monitoring for them."
+
+  - id: ats115-040-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Enable audit devices through the API"
+    source_readings:
+      - sections/section-040/module-01/course-02-enabling-file-and-socket-devices.md
+    prompt: "`bao audit enable` is refused on a server with OpenBao 2.3.2 or later. Which setting allows it?"
+    options:
+      - id: a
+        text: "`audit_allow = true` in the policy."
+        explanation: "Not correct. It is a server setting, not a policy setting."
+      - id: b
+        text: "`-force` on the command."
+        explanation: "Not correct. No such flag."
+      - id: c
+        text: "A token with `deny` on `sys/audit`."
+        explanation: "Not correct. `deny` refuses."
+      - id: d
+        text: "`unsafe_allow_api_audit_creation = true` in the server configuration."
+        explanation: "Correct. It is off by default."
+    correct_option: d
+    explanation: "Correct. It is off by default."
+
+  - id: ats115-040-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Compare hashes between devices"
+    source_readings:
+      - sections/section-040/module-01/course-02-enabling-file-and-socket-devices.md
+    prompt: "The same value hashed on a `file` device and on a `socket` device gives different hashes. Why?"
+    options:
+      - id: a
+        text: "Each device has its own salt."
+        explanation: "Correct. Hash the value once per device."
+      - id: b
+        text: "One of the devices is broken."
+        explanation: "Not correct. This is normal behaviour."
+      - id: c
+        text: "The hash includes the time."
+        explanation: "Not correct. It uses a per-device salt."
+      - id: d
+        text: "The socket device does not hash."
+        explanation: "Not correct. Both hash."
+    correct_option: a
+    explanation: "Correct. Hash the value once per device."
+
+  - id: ats115-040-q07
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Place the log file"
+    source_readings:
+      - sections/section-040/module-01/course-02-enabling-file-and-socket-devices.md
+    prompt: "Why write the file audit device to `/openbao/audit/audit.log` and not to `/tmp`?"
+    options:
+      - id: a
+        text: "`/tmp` is not writable."
+        explanation: "Not correct. It is writable, but not durable."
+      - id: b
+        text: "The audit volume survives a pod restart. The container file system does not."
+        explanation: "Correct. A log in `/tmp` is lost on restart."
+      - id: c
+        text: "OpenBao refuses `/tmp` paths."
+        explanation: "Not correct. It does not."
+      - id: d
+        text: "Files in `/tmp` are not hashed."
+        explanation: "Not correct. Hashing does not depend on the path."
+    correct_option: b
+    explanation: "Correct. A log in `/tmp` is lost on restart."
+
+  - id: ats115-040-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain declarative audit devices"
+    source_readings:
+      - sections/section-040/module-01/course-03-declarative-audit-and-blocking.md
+    prompt: "What is the main security benefit of an `audit` stanza in the server configuration?"
+    options:
+      - id: a
+        text: "It hashes more fields."
+        explanation: "Not correct. Hashing is the same."
+      - id: b
+        text: "It makes the log smaller."
+        explanation: "Not correct. Size is unchanged."
+      - id: c
+        text: "Nobody can disable or change the device through the API."
+        explanation: "Correct. Only a change to the file changes it."
+      - id: d
+        text: "It removes the need for a file path."
+        explanation: "Not correct. Options still apply."
+    correct_option: c
+    explanation: "Correct. Only a change to the file changes it."
+
+  - id: ats115-040-q09
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Apply a Helm configuration change"
+    source_readings:
+      - sections/section-040/module-01/course-03-declarative-audit-and-blocking.md
+    prompt: "After `helm upgrade` with a new `audit` stanza, the device is not enabled. What is the next step?"
+    options:
+      - id: a
+        text: "Delete the pod `openbao-0` and unseal the new pod, because the StatefulSet uses `OnDelete`."
+        explanation: "Correct. A new pod starts sealed."
+      - id: b
+        text: "Wait for the pod to restart on its own."
+        explanation: "Not correct. `OnDelete` never restarts it."
+      - id: c
+        text: "Run `bao audit enable` for the same path."
+        explanation: "Not correct. A declared device cannot share a path with an API device."
+      - id: d
+        text: "Run `helm rollback`."
+        explanation: "Not correct. That undoes the change."
+    correct_option: a
+    explanation: "Correct. A new pod starts sealed."
+
+  - id: ats115-040-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Predict behaviour when devices fail"
+    source_readings:
+      - sections/section-040/module-01/course-03-declarative-audit-and-blocking.md
+    prompt: "One device returns an error and another records the request. What happens to the request?"
+    options:
+      - id: a
+        text: "It fails, because every device must record it."
+        explanation: "Not correct. At least one is enough."
+      - id: b
+        text: "It waits until the failed device recovers."
+        explanation: "Not correct. Only a blocked write makes requests wait."
+      - id: c
+        text: "It succeeds but is not audited."
+        explanation: "Not correct. The other device recorded it."
+      - id: d
+        text: "It succeeds, because one record is enough."
+        explanation: "Correct. A device that blocks in the middle of a write is different: requests wait."
+    correct_option: d
+    explanation: "Correct. A device that blocks in the middle of a write is different: requests wait."

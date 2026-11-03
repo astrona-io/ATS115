@@ -1,0 +1,288 @@
+# Final domain quiz. Listed in astrona.yaml as the last `type: quiz` entry.
+schema_version: 1
+kind: question_bank
+id: ats115-final
+course_id: ATS115
+exam_code: OPENBAO
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: domain
+  id: ats115
+  title: "OpenBao: Access Control Policies, Leases & Audit Devices"
+questions:
+  - id: ats115-final-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Map API operations to capabilities"
+    source_readings:
+      - sections/section-010/module-01/course-01-paths-and-capabilities.md
+    prompt: "Which capability does a `bao kv list secret/inventory` command need on a KV version 2 mount?"
+    options:
+      - id: a
+        text: "`list` on `secret/metadata/inventory`."
+        explanation: "Correct. Listing uses the `metadata/` path and the `list` capability."
+      - id: b
+        text: "`read` on `secret/data/inventory`."
+        explanation: "Not correct. `read` on `data/` returns one secret, not a key list."
+      - id: c
+        text: "`list` on `secret/data/inventory/*`."
+        explanation: "Not correct. A `list` rule on `data/` does nothing."
+      - id: d
+        text: "`scan` on `secret/inventory`."
+        explanation: "Not correct. `scan` lists recursively and the path misses `metadata/`."
+    correct_option: a
+    explanation: "Correct. Listing uses the `metadata/` path and the `list` capability."
+
+  - id: ats115-final-q02
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Predict which rule wins"
+    source_readings:
+      - sections/section-010/module-01/course-02-matching-rules-and-deny.md
+    prompt: "A token has `secret/data/billing/*` with `read` and `secret/data/billing/admin` with `deny`. What happens on a read of `secret/data/billing/admin`?"
+    options:
+      - id: a
+        text: "It succeeds, because the glob allows `read`."
+        explanation: "Not correct. The glob has lower priority than the exact path."
+      - id: b
+        text: "It is refused, because the exact path has higher priority and its capability is `deny`."
+        explanation: "Correct. Only the highest-priority matching rule counts."
+      - id: c
+        text: "It succeeds, because capabilities add up."
+        explanation: "Not correct. OpenBao does not add capabilities of different patterns."
+      - id: d
+        text: "It is refused only if the token also has `sudo`."
+        explanation: "Not correct. `deny` needs no other capability."
+    correct_option: b
+    explanation: "Correct. Only the highest-priority matching rule counts."
+
+  - id: ats115-final-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Use parameter constraints"
+    source_readings:
+      - sections/section-010/module-01/course-03-testing-and-debugging-policies.md
+    prompt: "A help desk policy has `allowed_parameters = { \"password\" = [] }` on `auth/userpass/users/*`. What happens when the help desk writes `token_policies=root` to a user?"
+    options:
+      - id: a
+        text: "It succeeds, because the rule has `update`."
+        explanation: "Not correct. Parameter constraints limit the fields."
+      - id: b
+        text: "It succeeds, because an empty list allows every field."
+        explanation: "Not correct. The empty list means any value for `password` only."
+      - id: c
+        text: "The request is refused, because `token_policies` is not an allowed parameter."
+        explanation: "Correct. Only the `password` field is accepted."
+      - id: d
+        text: "It succeeds but the policy is ignored."
+        explanation: "Not correct. Constraints are enforced on this API."
+    correct_option: c
+    explanation: "Correct. Only the `password` field is accepted."
+
+  - id: ats115-final-q04
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Describe how a login becomes an entity"
+    source_readings:
+      - sections/section-020/module-01/course-01-templated-policies.md
+    prompt: "What links a userpass login of `alice` to an identity entity?"
+    options:
+      - id: a
+        text: "The token policy list."
+        explanation: "Not correct. Policies do not link a login to an entity."
+      - id: b
+        text: "The wrapping token of the login."
+        explanation: "Not correct. Logins do not use wrapping tokens."
+      - id: c
+        text: "The audit device path."
+        explanation: "Not correct. Audit devices only record requests."
+      - id: d
+        text: "An alias that says the user name `alice` on that mount belongs to the entity."
+        explanation: "Correct. The token then carries the entity ID."
+    correct_option: d
+    explanation: "Correct. The token then carries the entity ID."
+
+  - id: ats115-final-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Predict when group changes apply"
+    source_readings:
+      - sections/section-020/module-01/course-02-group-policies.md
+    prompt: "You attach a policy to the group `staff`. `dave` is a member and has an existing token. When does he get the policy?"
+    options:
+      - id: a
+        text: "Only after he logs in again."
+        explanation: "Not correct. That applies to `token_policies`."
+      - id: b
+        text: "On his next request, with the same token."
+        explanation: "Correct. OpenBao looks up identity policies on every request."
+      - id: c
+        text: "Only after the token is revoked."
+        explanation: "Not correct. Revoking is not needed."
+      - id: d
+        text: "Only after the server restarts."
+        explanation: "Not correct. No restart is needed."
+    correct_option: b
+    explanation: "Correct. OpenBao looks up identity policies on every request."
+
+  - id: ats115-final-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Prepare approvers"
+    source_readings:
+      - sections/section-020/module-01/course-03-control-groups.md
+    prompt: "Approvers get `permission denied` when they call `sys/control-group/authorize`. What is missing?"
+    options:
+      - id: a
+        text: "The `sudo` capability on the secret path."
+        explanation: "Not correct. Approval is a request to the authorize path."
+      - id: b
+        text: "A longer `ttl` on the control group."
+        explanation: "Not correct. TTL does not change permissions."
+      - id: c
+        text: "A policy with `update` on `sys/control-group/authorize` for the approvers group."
+        explanation: "Correct. The `default` policy does not allow it."
+      - id: d
+        text: "A second wrapping token."
+        explanation: "Not correct. The accessor identifies the request."
+    correct_option: c
+    explanation: "Correct. The `default` policy does not allow it."
+
+  - id: ats115-final-q07
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Tell the wrapping token and accessor apart"
+    source_readings:
+      - sections/section-030/module-01/course-01-response-wrapping.md
+    prompt: "What can the accessor of a wrapping token do?"
+    options:
+      - id: a
+        text: "Unwrap the token once."
+        explanation: "Not correct. Accessors cannot unwrap."
+      - id: b
+        text: "Unwrap the token any number of times."
+        explanation: "Not correct. Wrapping tokens are single-use."
+      - id: c
+        text: "Renew the token."
+        explanation: "Not correct. An accessor does not renew."
+      - id: d
+        text: "Identify the token. It cannot unwrap it."
+        explanation: "Correct. Only the token itself unwraps."
+    correct_option: d
+    explanation: "Correct. Only the token itself unwraps."
+
+  - id: ats115-final-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Check the creation path"
+    source_readings:
+      - sections/section-030/module-01/course-02-validating-and-unwrapping.md
+    prompt: "A wrapped AppRole secret ID arrives with the creation path `cubbyhole/response`. What should the receiver do?"
+    options:
+      - id: a
+        text: "Treat it as a possible interception and raise an alert, because the path is not the secret ID path of the role."
+        explanation: "Correct. Someone may have unwrapped the real secret and wrapped something else."
+      - id: b
+        text: "Unwrap it, because wrapping tokens are always safe."
+        explanation: "Not correct. The path is wrong."
+      - id: c
+        text: "Check only that it starts with `auth/`."
+        explanation: "Not correct. Check the whole path."
+      - id: d
+        text: "Generate a new secret ID and say nothing."
+        explanation: "Not correct. That hides the incident."
+    correct_option: a
+    explanation: "Correct. Someone may have unwrapped the real secret and wrapped something else."
+
+  - id: ats115-final-q09
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Choose the right mode after a leak"
+    source_readings:
+      - sections/section-030/module-01/course-03-leases-and-revocation.md
+    prompt: "A leaked token created child tokens. Which command contains the leak?"
+    options:
+      - id: a
+        text: "`bao token revoke -mode=orphan`"
+        explanation: "Not correct. The children become orphans and stay valid."
+      - id: b
+        text: "`bao lease revoke -prefix pki/`"
+        explanation: "Not correct. That revokes leases, not the token tree."
+      - id: c
+        text: "`bao token revoke` in the default mode, which revokes the token and its children."
+        explanation: "Correct. Children and their leases end with the parent."
+      - id: d
+        text: "`bao token renew`"
+        explanation: "Not correct. That extends the token."
+    correct_option: c
+    explanation: "Correct. Children and their leases end with the parent."
+
+  - id: ats115-final-q10
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain hashing in the audit log"
+    source_readings:
+      - sections/section-040/module-01/course-01-audit-devices-and-their-format.md
+    prompt: "A password in an audit entry appears as `hmac-sha256:...`. Why?"
+    options:
+      - id: a
+        text: "The password was encrypted with the unseal key."
+        explanation: "Not correct. It is a keyed hash, not encryption."
+      - id: b
+        text: "The client sent it hashed."
+        explanation: "Not correct. OpenBao hashes it."
+      - id: c
+        text: "The device was misconfigured."
+        explanation: "Not correct. This is normal behaviour."
+      - id: d
+        text: "OpenBao hashes most strings with HMAC-SHA256 so secrets do not appear in the log."
+        explanation: "Correct. The salt belongs to that audit device."
+    correct_option: d
+    explanation: "Correct. The salt belongs to that audit device."
+
+  - id: ats115-final-q11
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Compare hashes between devices"
+    source_readings:
+      - sections/section-040/module-01/course-02-enabling-file-and-socket-devices.md
+    prompt: "The same value hashed on a `file` device and on a `socket` device gives different hashes. Why?"
+    options:
+      - id: a
+        text: "Each device has its own salt."
+        explanation: "Correct. Hash the value once per device."
+      - id: b
+        text: "One of the devices is broken."
+        explanation: "Not correct. This is normal behaviour."
+      - id: c
+        text: "The hash includes the time."
+        explanation: "Not correct. It uses a per-device salt."
+      - id: d
+        text: "The socket device does not hash."
+        explanation: "Not correct. Both hash."
+    correct_option: a
+    explanation: "Correct. Hash the value once per device."
+
+  - id: ats115-final-q12
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Predict behaviour when devices fail"
+    source_readings:
+      - sections/section-040/module-01/course-03-declarative-audit-and-blocking.md
+    prompt: "One device returns an error and another records the request. What happens to the request?"
+    options:
+      - id: a
+        text: "It fails, because every device must record it."
+        explanation: "Not correct. At least one is enough."
+      - id: b
+        text: "It succeeds, because one record is enough."
+        explanation: "Correct. A device that blocks in the middle of a write is different: requests wait."
+      - id: c
+        text: "It waits until the failed device recovers."
+        explanation: "Not correct. Only a blocked write makes requests wait."
+      - id: d
+        text: "It succeeds but is not audited."
+        explanation: "Not correct. The other device recorded it."
+    correct_option: b
+    explanation: "Correct. A device that blocks in the middle of a write is different: requests wait."

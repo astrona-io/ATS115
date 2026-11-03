@@ -1,0 +1,245 @@
+# Knowledge check for section 030. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats115-030
+course_id: ATS115
+exam_code: OPENBAO
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: section
+  id: section-030
+  title: "Response Wrapping And Leases"
+placement:
+  position: after
+  reading: sections/section-030/module-01/course-03-leases-and-revocation.md
+questions:
+  - id: ats115-030-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain what response wrapping does"
+    source_readings:
+      - sections/section-030/module-01/course-01-response-wrapping.md
+    prompt: "A client sends a request with `-wrap-ttl=5m`. Where does OpenBao keep the original response?"
+    options:
+      - id: a
+        text: "In the audit log."
+        explanation: "Not correct. Audit logs hash values and do not store responses for retrieval."
+      - id: b
+        text: "In the client's own cubbyhole."
+        explanation: "Not correct. It uses the cubbyhole of the new token."
+      - id: c
+        text: "In the KV mount as a new version."
+        explanation: "Not correct. It does not write to KV."
+      - id: d
+        text: "In the cubbyhole of a new single-use token, which it returns to the client."
+        explanation: "Correct. The client only receives the wrapping token."
+    correct_option: d
+    explanation: "Correct. The client only receives the wrapping token."
+
+  - id: ats115-030-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Tell the wrapping token and accessor apart"
+    source_readings:
+      - sections/section-030/module-01/course-01-response-wrapping.md
+    prompt: "What can the accessor of a wrapping token do?"
+    options:
+      - id: a
+        text: "Identify the token. It cannot unwrap it."
+        explanation: "Correct. Only the token itself unwraps."
+      - id: b
+        text: "Unwrap the token once."
+        explanation: "Not correct. Accessors cannot unwrap."
+      - id: c
+        text: "Unwrap the token any number of times."
+        explanation: "Not correct. Wrapping tokens are single-use."
+      - id: d
+        text: "Renew the token."
+        explanation: "Not correct. An accessor does not renew."
+    correct_option: a
+    explanation: "Correct. Only the token itself unwraps."
+
+  - id: ats115-030-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Handle single-use behaviour"
+    source_readings:
+      - sections/section-030/module-01/course-01-response-wrapping.md
+    prompt: "A receiver runs `bao unwrap` twice with the same token. What happens on the second run?"
+    options:
+      - id: a
+        text: "It returns the same secret again."
+        explanation: "Not correct. The token is single-use."
+      - id: b
+        text: "It fails, because the first unwrap used up and revoked the token."
+        explanation: "Correct. Keep the unwrapped value, not the token."
+      - id: c
+        text: "It returns a new secret."
+        explanation: "Not correct. It does not generate anything."
+      - id: d
+        text: "It extends the TTL."
+        explanation: "Not correct. Unwrap does not renew."
+    correct_option: b
+    explanation: "Correct. Keep the unwrapped value, not the token."
+
+  - id: ats115-030-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Require wrapping in a policy"
+    source_readings:
+      - sections/section-030/module-01/course-01-response-wrapping.md
+    prompt: "Which setting makes a rule refuse requests that do not ask for wrapping?"
+    options:
+      - id: a
+        text: "`max_wrapping_ttl`"
+        explanation: "Not correct. That only limits how long the TTL may be."
+      - id: b
+        text: "`allowed_parameters`"
+        explanation: "Not correct. That limits request fields."
+      - id: c
+        text: "`min_wrapping_ttl`"
+        explanation: "Correct. A request without wrapping, or with a shorter TTL, is refused."
+      - id: d
+        text: "`required_parameters`"
+        explanation: "Not correct. That requires request fields, not wrapping."
+    correct_option: c
+    explanation: "Correct. A request without wrapping, or with a shorter TTL, is refused."
+
+  - id: ats115-030-q05
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Look up a wrapping token"
+    source_readings:
+      - sections/section-030/module-01/course-02-validating-and-unwrapping.md
+    prompt: "Which path lets the receiver check a wrapping token without unwrapping it?"
+    options:
+      - id: a
+        text: "`sys/wrapping/unwrap`"
+        explanation: "Not correct. That uses up the token."
+      - id: b
+        text: "`sys/wrapping/lookup`"
+        explanation: "Correct. It shows creation time, path and TTL, and it needs no other token."
+      - id: c
+        text: "`sys/leases/lookup`"
+        explanation: "Not correct. That is for leases."
+      - id: d
+        text: "`auth/token/lookup`"
+        explanation: "Not correct. That is for normal tokens, not wrapping tokens."
+    correct_option: b
+    explanation: "Correct. It shows creation time, path and TTL, and it needs no other token."
+
+  - id: ats115-030-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Check the creation path"
+    source_readings:
+      - sections/section-030/module-01/course-02-validating-and-unwrapping.md
+    prompt: "A wrapped AppRole secret ID arrives with the creation path `cubbyhole/response`. What should the receiver do?"
+    options:
+      - id: a
+        text: "Unwrap it, because wrapping tokens are always safe."
+        explanation: "Not correct. The path is wrong."
+      - id: b
+        text: "Check only that it starts with `auth/`."
+        explanation: "Not correct. Check the whole path."
+      - id: c
+        text: "Treat it as a possible interception and raise an alert, because the path is not the secret ID path of the role."
+        explanation: "Correct. Someone may have unwrapped the real secret and wrapped something else."
+      - id: d
+        text: "Generate a new secret ID and say nothing."
+        explanation: "Not correct. That hides the incident."
+    correct_option: c
+    explanation: "Correct. Someone may have unwrapped the real secret and wrapped something else."
+
+  - id: ats115-030-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "React to a failed lookup"
+    source_readings:
+      - sections/section-030/module-01/course-02-validating-and-unwrapping.md
+    prompt: "The lookup of a wrapping token fails. What does it mean?"
+    options:
+      - id: a
+        text: "Nothing. Lookups often fail."
+        explanation: "Not correct. A failed lookup is the signal wrapping exists to give."
+      - id: b
+        text: "The role ID is wrong."
+        explanation: "Not correct. Role IDs are not part of the lookup."
+      - id: c
+        text: "The secret ID is stored in a Kubernetes Secret."
+        explanation: "Not correct. That is a later step."
+      - id: d
+        text: "The token was already unwrapped, has expired or was revoked. It may be an interception."
+        explanation: "Correct. Treat it as an incident until the audit log says otherwise."
+    correct_option: d
+    explanation: "Correct. Treat it as an incident until the audit log says otherwise."
+
+  - id: ats115-030-q08
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain revoking one lease"
+    source_readings:
+      - sections/section-030/module-01/course-03-leases-and-revocation.md
+    prompt: "What does `bao lease revoke <LEASE_ID>` do for a PKI certificate?"
+    options:
+      - id: a
+        text: "It revokes that certificate only and adds its serial number to the CRL."
+        explanation: "Correct. Other certificates of the role stay valid."
+      - id: b
+        text: "It revokes every certificate of the role."
+        explanation: "Not correct. That needs `-prefix`."
+      - id: c
+        text: "It renews the certificate."
+        explanation: "Not correct. Renewing is another command."
+      - id: d
+        text: "It deletes the PKI role."
+        explanation: "Not correct. The role is not changed."
+    correct_option: a
+    explanation: "Correct. Other certificates of the role stay valid."
+
+  - id: ats115-030-q09
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Predict a revocation tree"
+    source_readings:
+      - sections/section-030/module-01/course-03-leases-and-revocation.md
+    prompt: "You revoke a token with the default mode. What else is revoked?"
+    options:
+      - id: a
+        text: "Only the token."
+        explanation: "Not correct. That is `-mode=orphan`."
+      - id: b
+        text: "Every token on the server."
+        explanation: "Not correct. Only the tree is revoked."
+      - id: c
+        text: "Every child token, and every lease the token and its children created."
+        explanation: "Correct. Orphan tokens are not in the tree."
+      - id: d
+        text: "Only its leases, not its children."
+        explanation: "Not correct. Children are revoked too."
+    correct_option: c
+    explanation: "Correct. Orphan tokens are not in the tree."
+
+  - id: ats115-030-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Choose the right mode after a leak"
+    source_readings:
+      - sections/section-030/module-01/course-03-leases-and-revocation.md
+    prompt: "A leaked token created child tokens. Which command contains the leak?"
+    options:
+      - id: a
+        text: "`bao token revoke -mode=orphan`"
+        explanation: "Not correct. The children become orphans and stay valid."
+      - id: b
+        text: "`bao token revoke` in the default mode, which revokes the token and its children."
+        explanation: "Correct. Children and their leases end with the parent."
+      - id: c
+        text: "`bao lease revoke -prefix pki/`"
+        explanation: "Not correct. That revokes leases, not the token tree."
+      - id: d
+        text: "`bao token renew`"
+        explanation: "Not correct. That extends the token."
+    correct_option: b
+    explanation: "Correct. Children and their leases end with the parent."
