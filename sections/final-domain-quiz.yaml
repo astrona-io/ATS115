@@ -286,3 +286,243 @@ questions:
         explanation: "Not correct. The other device recorded it."
     correct_option: b
     explanation: "Correct. A device that blocks in the middle of a write is different: requests wait."
+
+  - id: ats115-final-q13
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Predict when a policy change takes effect"
+    source_readings:
+      - sections/section-010/module-02/course-02-what-happens-to-tokens-when-a-policy-changes.md
+    prompt: "A policy is edited while tokens that carry it already exist. When do those tokens see the change?"
+    options:
+      - id: a
+        text: "Only after they are renewed."
+        explanation: "Not correct. Renewal is not needed."
+      - id: b
+        text: "On their next request."
+        explanation: "Correct. Tokens hold policy names and OpenBao reads the current text on each request."
+      - id: c
+        text: "Only for tokens created after the edit."
+        explanation: "Not correct. Existing tokens follow the new text at once."
+    correct_option: b
+    explanation: "Correct. Tokens hold policy names and OpenBao reads the current text on each request."
+
+  - id: ats115-final-q14
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain required_parameters"
+    source_readings:
+      - sections/section-010/module-02/course-03-parameter-constraints-in-depth.md
+    prompt: "What does `required_parameters` do?"
+    options:
+      - id: a
+        text: "It sets a default value for a missing parameter."
+        explanation: "Not correct. It never adds values."
+      - id: b
+        text: "It limits the values a parameter may have."
+        explanation: "Not correct. That is the job of `allowed_parameters`."
+      - id: c
+        text: "It refuses a request that leaves out a listed parameter."
+        explanation: "Correct. The request is refused before it reaches the endpoint."
+    correct_option: c
+    explanation: "Correct. The request is refused before it reaches the endpoint."
+
+  - id: ats115-final-q15
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Update entity metadata safely"
+    source_readings:
+      - sections/section-020/module-02/course-01-entities-and-aliases.md
+    prompt: "A write to an entity sends one `metadata=` key. What happens to the other metadata keys?"
+    options:
+      - id: a
+        text: "They are removed, because the write replaces the whole map."
+        explanation: "Correct. Send every key each time."
+      - id: b
+        text: "They are kept."
+        explanation: "Not correct. The map is replaced."
+      - id: c
+        text: "They move to the alias."
+        explanation: "Not correct. Metadata stays on the entity."
+    correct_option: a
+    explanation: "Correct. Send every key each time."
+
+  - id: ats115-final-q16
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain external group members"
+    source_readings:
+      - sections/section-020/module-02/course-03-external-groups-and-group-aliases.md
+    prompt: "How does an external group get its members?"
+    options:
+      - id: a
+        text: "From a member list written by an administrator."
+        explanation: "Not correct. A hand-made list is overwritten at login."
+      - id: b
+        text: "From logins, through a group alias that matches a name the provider reports."
+        explanation: "Correct. Hand-made member lists are overwritten."
+      - id: c
+        text: "From every entity that has a policy."
+        explanation: "Not correct. Membership comes from the provider."
+    correct_option: b
+    explanation: "Correct. Hand-made member lists are overwritten."
+
+  - id: ats115-final-q17
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Read the granted TTL"
+    source_readings:
+      - sections/section-030/module-02/course-02-ttl-maximum-ttl-and-renewal.md
+    prompt: "A client asks for a TTL above the allowed limits. What does OpenBao do?"
+    options:
+      - id: a
+        text: "It refuses the request."
+        explanation: "Not correct. The value is reduced."
+      - id: b
+        text: "It grants the requested TTL."
+        explanation: "Not correct. The limits apply."
+      - id: c
+        text: "It reduces the TTL without an error. Read `lease_duration` to see the result."
+        explanation: "Correct. The requested TTL is not the granted TTL."
+    correct_option: c
+    explanation: "Correct. The requested TTL is not the granted TTL."
+
+  - id: ats115-final-q18
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Know what a write to a role keeps"
+    source_readings:
+      - sections/section-030/module-02/course-03-token-roles.md
+    prompt: "A role is written with only the fields to change. What happens to fields that are left out?"
+    options:
+      - id: a
+        text: "They keep their old values."
+        explanation: "Correct. Read the role after every change."
+      - id: b
+        text: "They are reset to defaults."
+        explanation: "Not correct. A write keeps them."
+      - id: c
+        text: "The write is refused."
+        explanation: "Not correct. A partial write is accepted."
+    correct_option: a
+    explanation: "Correct. Read the role after every change."
+
+  - id: ats115-final-q19
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "List leases carefully"
+    source_readings:
+      - sections/section-030/module-03/course-01-the-lease-lifecycle-in-depth.md
+    prompt: "How should you list leases on a busy mount?"
+    options:
+      - id: a
+        text: "Always at the top of the mount."
+        explanation: "Not correct. It returns too much."
+      - id: b
+        text: "With the narrowest prefix that answers the question."
+        explanation: "Correct. A listing at the top is large and slow."
+      - id: c
+        text: "Never, because listing revokes leases."
+        explanation: "Not correct. Listing changes nothing."
+    correct_option: b
+    explanation: "Correct. A listing at the top is large and slow."
+
+  - id: ats115-final-q20
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Verify a containment"
+    source_readings:
+      - sections/section-030/module-03/course-03-an-incident-response-runbook.md
+    prompt: "How do you check that a leaked token no longer works?"
+    options:
+      - id: a
+        text: "Send a request with your own token."
+        explanation: "Not correct. It proves nothing."
+      - id: b
+        text: "Read the policy of the leaked token."
+        explanation: "Not correct. A policy does not show validity."
+      - id: c
+        text: "Send a request with the leaked value itself."
+        explanation: "Correct. Your own token proves nothing about the leaked value."
+    correct_option: c
+    explanation: "Correct. Your own token proves nothing about the leaked value."
+
+  - id: ats115-final-q21
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Compare hashes across devices"
+    source_readings:
+      - sections/section-040/module-02/course-01-hashing-options-and-raw-logging.md
+    prompt: "Why can you not compare hashes across two audit devices?"
+    options:
+      - id: a
+        text: "Each device hashes with its own salt."
+        explanation: "Correct. The same value gives different hashes."
+      - id: b
+        text: "Hashes expire after a day."
+        explanation: "Not correct. They do not expire."
+      - id: c
+        text: "One device uses no hashing."
+        explanation: "Not correct. Both hash by default."
+    correct_option: a
+    explanation: "Correct. The same value gives different hashes."
+
+  - id: ats115-final-q22
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Rotate a log file"
+    source_readings:
+      - sections/section-040/module-02/course-04-operate-audit-logs-safely.md
+    prompt: "What must happen after a log file is renamed for rotation?"
+    options:
+      - id: a
+        text: "Nothing, the server finds the new file."
+        explanation: "Not correct. It holds the old one."
+      - id: b
+        text: "The server must be signalled to reopen the file."
+        explanation: "Correct. Otherwise it keeps writing to the renamed file."
+      - id: c
+        text: "The device must be deleted."
+        explanation: "Not correct. A signal is enough."
+    correct_option: b
+    explanation: "Correct. Otherwise it keeps writing to the renamed file."
+
+  - id: ats115-final-q23
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Search for a known value"
+    source_readings:
+      - sections/section-040/module-03/course-02-finding-records-with-hashes-and-filters.md
+    prompt: "How do you find where a known value appears in the log?"
+    options:
+      - id: a
+        text: "Search for the clear text value."
+        explanation: "Not correct. Values are hashed."
+      - id: b
+        text: "Hash it with any device."
+        explanation: "Not correct. Each device has its own salt."
+      - id: c
+        text: "Hash it with the same device and search for the hash."
+        explanation: "Correct. The device path matters."
+    correct_option: c
+    explanation: "Correct. The device path matters."
+
+  - id: ats115-final-q24
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Handle the evidence"
+    source_readings:
+      - sections/section-040/module-03/course-03-following-an-identity-through-the-log.md
+    prompt: "How should you analyze the only copy of a log?"
+    options:
+      - id: a
+        text: "Work on a copy with a checksum."
+        explanation: "Correct. The original stays unchanged."
+      - id: b
+        text: "Edit it in place."
+        explanation: "Not correct. That spoils evidence."
+      - id: c
+        text: "Delete the old part first."
+        explanation: "Not correct. That removes evidence."
+    correct_option: a
+    explanation: "Correct. The original stays unchanged."

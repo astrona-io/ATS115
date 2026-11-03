@@ -1,0 +1,70 @@
+# Client pod for every ATS115 environment: curl and jq, used by graders to
+# call the OpenBao HTTP API. OpenBao itself is installed by Helm in
+# bootstrap/prepare.sh.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: clients
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tester
+  namespace: clients
+  labels:
+    app: tester
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tester
+  template:
+    metadata:
+      labels:
+        app: tester
+    spec:
+      containers:
+        - name: tester
+          image: nicolaka/netshoot:v0.13
+          command: ["sh", "-c", "while true; do sleep 30; done"]
+---
+# A TCP listener that prints every audit record it receives to its log, so a
+# socket audit device has somewhere to send to. Read it with
+# kubectl -n clients logs deploy/audit-sink.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: audit-sink
+  namespace: clients
+  labels:
+    app: audit-sink
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: audit-sink
+  template:
+    metadata:
+      labels:
+        app: audit-sink
+    spec:
+      containers:
+        - name: audit-sink
+          image: alpine/socat:1.8.1.3
+          args: ["-u", "TCP-LISTEN:9090,fork,reuseaddr", "STDOUT"]
+          ports:
+            - name: audit
+              containerPort: 9090
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: audit-sink
+  namespace: clients
+spec:
+  selector:
+    app: audit-sink
+  ports:
+    - name: audit
+      port: 9090
+      targetPort: audit

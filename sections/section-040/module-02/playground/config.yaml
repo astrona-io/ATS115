@@ -1,0 +1,28 @@
+# Tune Audit Devices For Production (PLAYGROUND) — Playground environment
+# A clean sandbox: it spins up, runs the preparation script, then stays
+# running for free exploration. No task, no grading, no `astrona submit`.
+# Schema: internal/config.LabConfig.
+
+metadata:
+  name: "ats-115-playground-040-02"
+  docs:
+    guide: "docs/overview.md"
+bootstrap:
+  init:
+    - name: "prepare"
+      description: "Install Helm and bao, add the CoreDNS rewrite, install, initialize and unseal OpenBao, and create the module's starting objects."
+      type: "file"
+      source: "bootstrap/prepare.sh"
+  manifests:
+    - name: "lab-start"
+      description: "The tester pod (namespace clients) and the audit-sink listener."
+      type: "file"
+      source: "manifests/lab-start.yaml"
+teardown:
+  keepCluster: false
+runtime:
+  kind:
+    preloadImages:
+      - alpine/socat:1.8.1.3
+      - nicolaka/netshoot:v0.13
+      - quay.io/openbao/openbao:2.7.1

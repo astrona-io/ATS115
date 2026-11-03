@@ -103,6 +103,50 @@ modules:
         path: sections/section-010/module-01/course-04-summary.md
 
       - type: reading
+        title: "Manage Policies In Production"
+        path: sections/section-010/module-02/course.md
+      - type: reading
+        title: "The Policy API And The Default Policy"
+        path: sections/section-010/module-02/course-01-policy-api-and-the-default-policy.md
+      - type: reading
+        title: "What Happens To Tokens When A Policy Changes"
+        path: sections/section-010/module-02/course-02-what-happens-to-tokens-when-a-policy-changes.md
+      - type: reading
+        title: "Parameter Constraints In Depth"
+        path: sections/section-010/module-02/course-03-parameter-constraints-in-depth.md
+      - type: reading
+        title: "Administrator Policies And Root-Protected Paths"
+        path: sections/section-010/module-02/course-04-administrator-policies-and-root-protected-paths.md
+      - type: reading
+        title: Question
+        path: sections/section-010/module-02/labs/lab-01/question.md
+      - type: lab
+        title: "Delegate Policy Administration Without The Root Token"
+        path: sections/section-010/module-02/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 20m
+        topic: policies
+        task_kind: build
+        tags: [acl-policy, policy-admin, sudo, glob-path, token-capabilities]
+        learning_goals:
+          - Write a policy that lets a team lead manage only policies whose names start with a fixed prefix
+          - Keep the lead away from the default policy, other teams' policies and secret data
+          - Prove the allowed and refused operations with a real token
+        resources:
+          - name: "Policies"
+            url: https://openbao.org/docs/concepts/policies/
+          - name: "bao token capabilities"
+            url: https://openbao.org/docs/commands/token/capabilities/
+      - type: reading
+        title: Summary
+        path: sections/section-010/module-02/course-05-summary.md
+      - type: quiz
+        title: "Knowledge Check: Manage Policies In Production"
+        path: sections/section-010/module-02/quiz.yaml
+        question_count: 10
+        pass_score: 70
+
+      - type: reading
         title: Question
         path: sections/section-010/capstone/labs/lab-01/question.md
       - type: lab
@@ -174,6 +218,50 @@ modules:
       - type: reading
         title: Summary
         path: sections/section-020/module-01/course-04-summary.md
+
+      - type: reading
+        title: "Work With Entities, Aliases And Groups"
+        path: sections/section-020/module-02/course.md
+      - type: reading
+        title: "Entities And Aliases"
+        path: sections/section-020/module-02/course-01-entities-and-aliases.md
+      - type: reading
+        title: "Groups And Policy Inheritance"
+        path: sections/section-020/module-02/course-02-groups-and-policy-inheritance.md
+      - type: reading
+        title: "External Groups And Group Aliases"
+        path: sections/section-020/module-02/course-03-external-groups-and-group-aliases.md
+      - type: reading
+        title: "The Template Variable Reference"
+        path: sections/section-020/module-02/course-04-the-template-variable-reference.md
+      - type: reading
+        title: Question
+        path: sections/section-020/module-02/labs/lab-01/question.md
+      - type: lab
+        title: "Scope Team Areas By Metadata And Pass Rights Down A Group Tree"
+        path: sections/section-020/module-02/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: identity
+        task_kind: build
+        tags: [identity, entity, alias, group, templated-policy, metadata]
+        learning_goals:
+          - Attach team metadata to entities and use it in a templated policy
+          - Build a group tree so that rights pass from a parent group to child group members
+          - Check the result in the identity policies of a real login token
+        resources:
+          - name: "Identity"
+            url: https://openbao.org/docs/concepts/identity/
+          - name: "Policies"
+            url: https://openbao.org/docs/concepts/policies/
+      - type: reading
+        title: Summary
+        path: sections/section-020/module-02/course-05-summary.md
+      - type: quiz
+        title: "Knowledge Check: Work With Entities, Aliases And Groups"
+        path: sections/section-020/module-02/quiz.yaml
+        question_count: 10
+        pass_score: 70
 
       - type: reading
         title: Question
@@ -252,6 +340,94 @@ modules:
         path: sections/section-030/module-01/course-04-summary.md
 
       - type: reading
+        title: "Choose Token Types, Lifetimes And Roles"
+        path: sections/section-030/module-02/course.md
+      - type: reading
+        title: "Token Types"
+        path: sections/section-030/module-02/course-01-token-types.md
+      - type: reading
+        title: "TTL, Maximum TTL And Renewal"
+        path: sections/section-030/module-02/course-02-ttl-maximum-ttl-and-renewal.md
+      - type: reading
+        title: "Token Roles"
+        path: sections/section-030/module-02/course-03-token-roles.md
+      - type: reading
+        title: "Use Limits, Accessors And Network Binding"
+        path: sections/section-030/module-02/course-04-use-limits-accessors-and-network-binding.md
+      - type: reading
+        title: Question
+        path: sections/section-030/module-02/labs/lab-01/question.md
+      - type: lab
+        title: "Make The Worker Role Strict"
+        path: sections/section-030/module-02/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 20m
+        topic: tokens
+        task_kind: troubleshooting
+        tags: [token-role, allowed-policies, ttl, use-limit, orphan]
+        learning_goals:
+          - Limit a token role to the policies and lifetimes a worker needs
+          - Restrict who may create tokens through the role path
+          - Prove with real tokens that the role refuses what it should refuse
+        resources:
+          - name: "Tokens"
+            url: https://openbao.org/docs/concepts/tokens/
+          - name: "Policies"
+            url: https://openbao.org/docs/concepts/policies/
+      - type: reading
+        title: Summary
+        path: sections/section-030/module-02/course-05-summary.md
+      - type: quiz
+        title: "Knowledge Check: Choose Token Types, Lifetimes And Roles"
+        path: sections/section-030/module-02/quiz.yaml
+        question_count: 10
+        pass_score: 70
+
+      - type: reading
+        title: "Manage Leases And Respond To A Leaked Credential"
+        path: sections/section-030/module-03/course.md
+      - type: reading
+        title: "The Lease Lifecycle In Depth"
+        path: sections/section-030/module-03/course-01-the-lease-lifecycle-in-depth.md
+      - type: reading
+        title: "Revoking Leases And Tokens At Scale"
+        path: sections/section-030/module-03/course-02-revoking-leases-and-tokens-at-scale.md
+      - type: reading
+        title: "An Incident Response Runbook"
+        path: sections/section-030/module-03/course-03-an-incident-response-runbook.md
+      - type: reading
+        title: "Prepare Before An Incident"
+        path: sections/section-030/module-03/course-04-prepare-before-an-incident.md
+      - type: reading
+        title: Question
+        path: sections/section-030/module-03/labs/lab-01/question.md
+      - type: lab
+        title: "Contain A Leaked Credential"
+        path: sections/section-030/module-03/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 20m
+        topic: leases
+        task_kind: troubleshooting
+        tags: [lease, revocation, incident-response, approle, token-accessor]
+        learning_goals:
+          - Contain a leaked credential before revoking what it created
+          - Revoke only the affected leases and tokens, not the whole mount
+          - Verify with the leaked value itself that it no longer works
+        resources:
+          - name: "Lease, renew and revoke"
+            url: https://openbao.org/docs/concepts/lease/
+          - name: "Tokens"
+            url: https://openbao.org/docs/concepts/tokens/
+      - type: reading
+        title: Summary
+        path: sections/section-030/module-03/course-05-summary.md
+      - type: quiz
+        title: "Knowledge Check: Manage Leases And Respond To A Leaked Credential"
+        path: sections/section-030/module-03/quiz.yaml
+        question_count: 10
+        pass_score: 70
+
+      - type: reading
         title: Question
         path: sections/section-030/capstone/labs/lab-01/question.md
       - type: lab
@@ -328,6 +504,96 @@ modules:
       - type: reading
         title: Summary
         path: sections/section-040/module-01/course-04-summary.md
+
+      - type: reading
+        title: "Tune Audit Devices For Production"
+        path: sections/section-040/module-02/course.md
+      - type: reading
+        title: "Hashing Options And Raw Logging"
+        path: sections/section-040/module-02/course-01-hashing-options-and-raw-logging.md
+      - type: reading
+        title: "Shaping The Log Lines"
+        path: sections/section-040/module-02/course-02-shaping-the-log-lines.md
+      - type: reading
+        title: "Socket Device Settings"
+        path: sections/section-040/module-02/course-03-socket-device-settings.md
+      - type: reading
+        title: "Operate Audit Logs Safely"
+        path: sections/section-040/module-02/course-04-operate-audit-logs-safely.md
+      - type: reading
+        title: Question
+        path: sections/section-040/module-02/labs/lab-01/question.md
+      - type: lab
+        title: "Replace A Raw Debug Device"
+        path: sections/section-040/module-02/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 20m
+        topic: audit
+        task_kind: migration
+        tags: [audit-device, log-raw, hmac-accessor, file-device, socket-device]
+        learning_goals:
+          - Replace a device that logs secrets in clear text with a hashing device
+          - Keep at least one complete audit copy during the change
+          - Protect the old log file that already holds secret values
+        resources:
+          - name: "Audit devices"
+            url: https://openbao.org/docs/audit/
+          - name: "File audit device"
+            url: https://openbao.org/docs/audit/file/
+          - name: "Socket audit device"
+            url: https://openbao.org/docs/audit/socket/
+      - type: reading
+        title: Summary
+        path: sections/section-040/module-02/course-05-summary.md
+      - type: quiz
+        title: "Knowledge Check: Tune Audit Devices For Production"
+        path: sections/section-040/module-02/quiz.yaml
+        question_count: 10
+        pass_score: 70
+
+      - type: reading
+        title: "Investigate Incidents With The Audit Log"
+        path: sections/section-040/module-03/course.md
+      - type: reading
+        title: "Reading An Audit Record"
+        path: sections/section-040/module-03/course-01-reading-an-audit-record.md
+      - type: reading
+        title: "Finding Records With Hashes And Filters"
+        path: sections/section-040/module-03/course-02-finding-records-with-hashes-and-filters.md
+      - type: reading
+        title: "Following An Identity Through The Log"
+        path: sections/section-040/module-03/course-03-following-an-identity-through-the-log.md
+      - type: reading
+        title: "Patterns Worth An Alert"
+        path: sections/section-040/module-03/course-04-patterns-worth-an-alert.md
+      - type: reading
+        title: Question
+        path: sections/section-040/module-03/labs/lab-01/question.md
+      - type: lab
+        title: "Find Who Read The Payroll Secret"
+        path: sections/section-040/module-03/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: audit
+        task_kind: troubleshooting
+        tags: [audit-log, hmac, entity-id, jq, investigation]
+        learning_goals:
+          - Find the read requests for one secret in a JSON audit log
+          - Tie the requests to an entity and follow the tokens it created
+          - Report only what the log shows
+        resources:
+          - name: "Audit devices"
+            url: https://openbao.org/docs/audit/
+          - name: "File audit device"
+            url: https://openbao.org/docs/audit/file/
+      - type: reading
+        title: Summary
+        path: sections/section-040/module-03/course-05-summary.md
+      - type: quiz
+        title: "Knowledge Check: Investigate Incidents With The Audit Log"
+        path: sections/section-040/module-03/quiz.yaml
+        question_count: 10
+        pass_score: 70
 
       - type: reading
         title: Question

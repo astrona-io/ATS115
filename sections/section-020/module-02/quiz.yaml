@@ -1,0 +1,215 @@
+# Knowledge check for module 02 of section 020. Listed in astrona.yaml as a `type: quiz` entry after the module summary.
+schema_version: 1
+kind: question_bank
+id: ats115-020-02
+course_id: ATS115
+exam_code: OPENBAO
+status: draft
+provenance: "Original practice material written for this course; not official exam questions."
+scope:
+  type: module
+  id: "section-020/module-02"
+  title: "Work With Entities, Aliases And Groups"
+placement:
+  position: after
+  reading: sections/section-020/module-02/course-05-summary.md
+questions:
+  - id: ats115-020-02-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Define an entity alias"
+    source_readings:
+      - sections/section-020/module-02/course-01-entities-and-aliases.md
+    prompt: "What does an entity alias record?"
+    options:
+      - id: a
+        text: "That a login name on one auth mount belongs to one entity."
+        explanation: "Correct. The alias links a name and a mount accessor to an entity."
+      - id: b
+        text: "That an entity has a policy."
+        explanation: "Not correct. Policies are attached to the entity or group."
+      - id: c
+        text: "That two entities are the same person."
+        explanation: "Not correct. An alias belongs to one entity."
+    correct_option: a
+    explanation: "Correct. The alias links a name and a mount accessor to an entity."
+
+  - id: ats115-020-02-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Find the mount accessor"
+    source_readings:
+      - sections/section-020/module-02/course-01-entities-and-aliases.md
+    prompt: "Where do you copy the mount accessor for an alias from?"
+    options:
+      - id: a
+        text: "The output of `bao policy list`."
+        explanation: "Not correct. Policies have no accessor."
+      - id: b
+        text: "The output of `bao auth list`."
+        explanation: "Correct. The list shows the accessor of each auth mount."
+      - id: c
+        text: "The token lookup of the root token."
+        explanation: "Not correct. That token is not tied to an auth mount."
+    correct_option: b
+    explanation: "Correct. The list shows the accessor of each auth mount."
+
+  - id: ats115-020-02-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Predict a wrong accessor"
+    source_readings:
+      - sections/section-020/module-02/course-01-entities-and-aliases.md
+    prompt: "An alias is created with the wrong mount accessor. What happens at the next login?"
+    options:
+      - id: a
+        text: "The login fails."
+        explanation: "Not correct. The login works and creates a new entity."
+      - id: b
+        text: "The login uses the first entity with that name."
+        explanation: "Not correct. The mount accessor must match."
+      - id: c
+        text: "A second entity is created, because the alias matches nothing."
+        explanation: "Correct. Names are matched with the mount accessor."
+    correct_option: c
+    explanation: "Correct. Names are matched with the mount accessor."
+
+  - id: ats115-020-02-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Update entity metadata safely"
+    source_readings:
+      - sections/section-020/module-02/course-01-entities-and-aliases.md
+    prompt: "A write to an entity sends one `metadata=` key. What happens to the other metadata keys?"
+    options:
+      - id: a
+        text: "They are removed, because the write replaces the whole map."
+        explanation: "Correct. Send every key each time."
+      - id: b
+        text: "They are kept."
+        explanation: "Not correct. The map is replaced."
+      - id: c
+        text: "They move to the alias."
+        explanation: "Not correct. Metadata stays on the entity."
+    correct_option: a
+    explanation: "Correct. Send every key each time."
+
+  - id: ats115-020-02-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Describe a disabled entity"
+    source_readings:
+      - sections/section-020/module-02/course-01-entities-and-aliases.md
+    prompt: "What happens to existing tokens of an entity that is disabled?"
+    options:
+      - id: a
+        text: "They are revoked at once."
+        explanation: "Not correct. Revocation is a separate action."
+      - id: b
+        text: "They are not revoked, but every request with them fails."
+        explanation: "Correct. Disabling blocks use without ending the tokens."
+      - id: c
+        text: "They keep working until they expire."
+        explanation: "Not correct. Requests fail while the entity is disabled."
+    correct_option: b
+    explanation: "Correct. Disabling blocks use without ending the tokens."
+
+  - id: ats115-020-02-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Trace policy inheritance in a group tree"
+    source_readings:
+      - sections/section-020/module-02/course-02-groups-and-policy-inheritance.md
+    prompt: "A group is a member of a parent group. Which policies do its members get?"
+    options:
+      - id: a
+        text: "Only the group's policies."
+        explanation: "Not correct. The parent's policies reach the child's members."
+      - id: b
+        text: "The parent's policies and none of the group's."
+        explanation: "Not correct. The group's own policies apply too."
+      - id: c
+        text: "Their own, the group's and the parent's."
+        explanation: "Correct. Rights flow down to members of child groups."
+    correct_option: c
+    explanation: "Correct. Rights flow down to members of child groups."
+
+  - id: ats115-020-02-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Avoid replacing a member list"
+    source_readings:
+      - sections/section-020/module-02/course-02-groups-and-policy-inheritance.md
+    prompt: "What is the risk of writing `member_entity_ids` with one ID?"
+    options:
+      - id: a
+        text: "The whole member list is replaced by that one ID."
+        explanation: "Correct. Send the full list each time."
+      - id: b
+        text: "The ID is appended to the list."
+        explanation: "Not correct. The write sets the list."
+      - id: c
+        text: "The group is deleted."
+        explanation: "Not correct. Only the list changes."
+    correct_option: a
+    explanation: "Correct. Send the full list each time."
+
+  - id: ats115-020-02-q08
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Know where group rights are shown"
+    source_readings:
+      - sections/section-020/module-02/course-02-groups-and-policy-inheritance.md
+    prompt: "Where do you look for a right that comes from a group?"
+    options:
+      - id: a
+        text: "In `token_policies`."
+        explanation: "Not correct. That field lists direct policies."
+      - id: b
+        text: "In `identity_policies` of the token lookup."
+        explanation: "Correct. Group rights show there only."
+      - id: c
+        text: "In the `ttl` field."
+        explanation: "Not correct. It holds the remaining lifetime."
+    correct_option: b
+    explanation: "Correct. Group rights show there only."
+
+  - id: ats115-020-02-q09
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain external group members"
+    source_readings:
+      - sections/section-020/module-02/course-03-external-groups-and-group-aliases.md
+    prompt: "How does an external group get its members?"
+    options:
+      - id: a
+        text: "From a member list written by an administrator."
+        explanation: "Not correct. A hand-made list is overwritten at login."
+      - id: b
+        text: "From every entity that has a policy."
+        explanation: "Not correct. Membership comes from the provider."
+      - id: c
+        text: "From logins, through a group alias that matches a name the provider reports."
+        explanation: "Correct. Hand-made member lists are overwritten."
+    correct_option: c
+    explanation: "Correct. Hand-made member lists are overwritten."
+
+  - id: ats115-020-02-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Predict templated rules without an entity"
+    source_readings:
+      - sections/section-020/module-02/course-04-the-template-variable-reference.md
+    prompt: "A token from `bao token create` meets a rule with an entity template. What happens?"
+    options:
+      - id: a
+        text: "The rule never matches, because the token has no identity."
+        explanation: "Correct. The rule is skipped without an error message."
+      - id: b
+        text: "The request fails with a template error."
+        explanation: "Not correct. No error is reported."
+      - id: c
+        text: "The rule matches with an empty value."
+        explanation: "Not correct. The rule is skipped."
+    correct_option: a
+    explanation: "Correct. The rule is skipped without an error message."

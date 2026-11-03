@@ -1,0 +1,57 @@
+# Delegate Policy Administration Without The Root Token
+# Astrona graded lab. Schema: internal/config.LabConfig.
+
+metadata:
+  name: "ats-115-lab-010-02"
+  docs:
+    guide: "solution.md"
+    solution: "solution.md"
+    question: "question.md"
+    examQuestion: "question.md"
+    prerequisites: "prerequisites.md"
+bootstrap:
+  init:
+    - name: "install-openbao"
+      description: "Installs Helm, bao, the tester pod and OpenBao v2.7.1, initialized and unsealed"
+      type: "file"
+      source: "bootstrap/01-install-openbao.sh"
+    - name: "ats-115-lab-010-02-setup"
+      description: "Creates the starting state the task works from"
+      type: "file"
+      source: "bootstrap/02-seed-state.sh"
+  manifests:
+    - name: "lab-start"
+      description: "The tester pod (namespace clients)."
+      type: "file"
+      source: "manifests/lab-start.yaml"
+testing:
+  init:
+    - name: "wait-for-openbao"
+      description: "Waits until OpenBao answers unsealed from the tester pod"
+      type: "file"
+      source: "testing/wait-for-openbao.sh"
+    - name: "reference-solution"
+      description: "The remediation a correct learner performs; used by `astrona test`"
+      type: "file"
+      source: "solution/apply.sh"
+validation:
+  scripts:
+    - name: "validate-policy-fence"
+      description: "Confirms policy-admin manages app- policies and nothing else"
+      type: "file"
+      source: "validation/validate-policy-fence.sh"
+    - name: "validate-no-secrets-no-sudo"
+      description: "Confirms policy-admin cannot read secrets or change audit devices"
+      type: "file"
+      source: "validation/validate-no-secrets-no-sudo.sh"
+    - name: "validate-default-unchanged"
+      description: "Confirms the default policy is unchanged"
+      type: "file"
+      source: "validation/validate-default-unchanged.sh"
+teardown:
+  keepCluster: false
+runtime:
+  kind:
+    preloadImages:
+      - nicolaka/netshoot:v0.13
+      - quay.io/openbao/openbao:2.7.1

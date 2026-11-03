@@ -26,6 +26,16 @@ The module starts at its landing page, which also launches the playground. The p
 3. Testing Policies And Reading A Permission Denied, followed by the lab **Fix The Inventory Application Policy**
 4. Summary
 
+### 2. Manage Policies In Production
+
+The module starts at its landing page, which also launches the playground. The playground holds OpenBao with KV, the policy `team-app` and the secrets engines the examples use.
+
+1. The Policy API And The Default Policy
+2. What Happens To Tokens When A Policy Changes
+3. Parameter Constraints In Depth
+4. Administrator Policies And Root-Protected Paths, followed by the lab **Delegate Policy Administration Without The Root Token**
+5. Summary
+
 ## Section capstone: Repair Policies That Deny Or Allow Too Much
 
 The capstone is one graded scenario with three faulty policies. One denies the secret its application needs, one never matches because of a glob in the wrong place, and one allows far more than the application uses. Work it after the module lab.

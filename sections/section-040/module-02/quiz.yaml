@@ -1,0 +1,215 @@
+# Knowledge check for module 02 of section 040. Listed in astrona.yaml as a `type: quiz` entry after the module summary.
+schema_version: 1
+kind: question_bank
+id: ats115-040-02
+course_id: ATS115
+exam_code: OPENBAO
+status: draft
+provenance: "Original practice material written for this course; not official exam questions."
+scope:
+  type: module
+  id: "section-040/module-02"
+  title: "Tune Audit Devices For Production"
+placement:
+  position: after
+  reading: sections/section-040/module-02/course-05-summary.md
+questions:
+  - id: ats115-040-02-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Identify the risk of raw logging"
+    source_readings:
+      - sections/section-040/module-02/course-01-hashing-options-and-raw-logging.md
+    prompt: "What does `log_raw=true` do?"
+    options:
+      - id: a
+        text: "It writes values in clear text instead of hashes."
+        explanation: "Correct. Every secret is then in the log file and its copies."
+      - id: b
+        text: "It writes a second hashed copy."
+        explanation: "Not correct. It disables hashing."
+      - id: c
+        text: "It turns on compression."
+        explanation: "Not correct. It has no effect on size."
+    correct_option: a
+    explanation: "Correct. Every secret is then in the log file and its copies."
+
+  - id: ats115-040-02-q02
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Clean up after debugging"
+    source_readings:
+      - sections/section-040/module-02/course-01-hashing-options-and-raw-logging.md
+    prompt: "A raw device is disabled. What remains?"
+    options:
+      - id: a
+        text: "Nothing, the file is removed."
+        explanation: "Not correct. The file stays."
+      - id: b
+        text: "The file, with every secret it recorded."
+        explanation: "Correct. Disabling stops writing but does not delete the file."
+      - id: c
+        text: "Only hashes."
+        explanation: "Not correct. The raw values remain."
+    correct_option: b
+    explanation: "Correct. Disabling stops writing but does not delete the file."
+
+  - id: ats115-040-02-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Understand hmac_accessor"
+    source_readings:
+      - sections/section-040/module-02/course-01-hashing-options-and-raw-logging.md
+    prompt: "What is the risk of `hmac_accessor=false`?"
+    options:
+      - id: a
+        text: "Tokens are logged in clear text."
+        explanation: "Not correct. The option covers accessors."
+      - id: b
+        text: "The log is not written."
+        explanation: "Not correct. Only the accessor hashing changes."
+      - id: c
+        text: "Anyone with the log gets usable accessors."
+        explanation: "Correct. Accessors can be used to look up or revoke tokens."
+    correct_option: c
+    explanation: "Correct. Accessors can be used to look up or revoke tokens."
+
+  - id: ats115-040-02-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Compare hashes across devices"
+    source_readings:
+      - sections/section-040/module-02/course-01-hashing-options-and-raw-logging.md
+    prompt: "Why can you not compare hashes across two audit devices?"
+    options:
+      - id: a
+        text: "Each device hashes with its own salt."
+        explanation: "Correct. The same value gives different hashes."
+      - id: b
+        text: "Hashes expire after a day."
+        explanation: "Not correct. They do not expire."
+      - id: c
+        text: "One device uses no hashing."
+        explanation: "Not correct. Both hash by default."
+    correct_option: a
+    explanation: "Correct. The same value gives different hashes."
+
+  - id: ats115-040-02-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Predict elided lists"
+    source_readings:
+      - sections/section-040/module-02/course-02-shaping-the-log-lines.md
+    prompt: "What does a log line show after `elide_list_responses` is on?"
+    options:
+      - id: a
+        text: "The key names in clear text."
+        explanation: "Not correct. They are replaced."
+      - id: b
+        text: "A count instead of the key names."
+        explanation: "Correct. The names are replaced with a count."
+      - id: c
+        text: "Nothing for list requests."
+        explanation: "Not correct. The request still appears."
+    correct_option: b
+    explanation: "Correct. The names are replaced with a count."
+
+  - id: ats115-040-02-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Use a prefix safely"
+    source_readings:
+      - sections/section-040/module-02/course-02-shaping-the-log-lines.md
+    prompt: "What can break when a `prefix` is set on a device?"
+    options:
+      - id: a
+        text: "The hashing."
+        explanation: "Not correct. The prefix does not change hashing."
+      - id: b
+        text: "The device path."
+        explanation: "Not correct. The path is unchanged."
+      - id: c
+        text: "A parser that expects only JSON lines."
+        explanation: "Correct. Lines that are not valid JSON are dropped or misread."
+    correct_option: c
+    explanation: "Correct. Lines that are not valid JSON are dropped or misread."
+
+  - id: ats115-040-02-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose a socket protocol"
+    source_readings:
+      - sections/section-040/module-02/course-03-socket-device-settings.md
+    prompt: "Why is `udp` a poor only copy of the audit log?"
+    options:
+      - id: a
+        text: "Lost records are not reported."
+        explanation: "Correct. UDP gives no delivery check."
+      - id: b
+        text: "It cannot carry JSON."
+        explanation: "Not correct. The format is not the problem."
+      - id: c
+        text: "It needs a root token."
+        explanation: "Not correct. That is not the reason."
+    correct_option: a
+    explanation: "Correct. UDP gives no delivery check."
+
+  - id: ats115-040-02-q08
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Combine devices"
+    source_readings:
+      - sections/section-040/module-02/course-03-socket-device-settings.md
+    prompt: "Why keep a file device next to a socket device?"
+    options:
+      - id: a
+        text: "A socket device cannot hash."
+        explanation: "Not correct. It hashes."
+      - id: b
+        text: "A record that failed to send is lost for the socket device, and the file is the complete copy."
+        explanation: "Correct. A failed send is not retried."
+      - id: c
+        text: "A file device speeds up the socket."
+        explanation: "Not correct. They are independent."
+    correct_option: b
+    explanation: "Correct. A failed send is not retried."
+
+  - id: ats115-040-02-q09
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Rotate a log file"
+    source_readings:
+      - sections/section-040/module-02/course-04-operate-audit-logs-safely.md
+    prompt: "What must happen after a log file is renamed for rotation?"
+    options:
+      - id: a
+        text: "Nothing, the server finds the new file."
+        explanation: "Not correct. It holds the old one."
+      - id: b
+        text: "The device must be deleted."
+        explanation: "Not correct. A signal is enough."
+      - id: c
+        text: "The server must be signalled to reopen the file."
+        explanation: "Correct. Otherwise it keeps writing to the renamed file."
+    correct_option: c
+    explanation: "Correct. Otherwise it keeps writing to the renamed file."
+
+  - id: ats115-040-02-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Alert on audit changes"
+    source_readings:
+      - sections/section-040/module-02/course-04-operate-audit-logs-safely.md
+    prompt: "Which request should always raise an alert?"
+    options:
+      - id: a
+        text: "A change to `sys/audit`."
+        explanation: "Correct. Someone can switch off the log without anyone noticing."
+      - id: b
+        text: "A read of `secret/`."
+        explanation: "Not correct. That is normal use."
+      - id: c
+        text: "A token lookup."
+        explanation: "Not correct. That is normal use."
+    correct_option: a
+    explanation: "Correct. Someone can switch off the log without anyone noticing."

@@ -24,6 +24,26 @@ The module starts at its landing page, which also launches the playground. The p
 3. Declarative Audit Devices And Blocked Logging
 4. Summary
 
+### 2. Tune Audit Devices For Production
+
+The module starts at its landing page, which also launches the playground. The playground holds OpenBao with a file audit device that you tune and replace.
+
+1. Hashing Options And Raw Logging
+2. Shaping The Log Lines
+3. Socket Device Settings
+4. Operate Audit Logs Safely, followed by the lab **Replace A Raw Debug Device**
+5. Summary
+
+### 3. Investigate Incidents With The Audit Log
+
+The module starts at its landing page, which also launches the playground. The playground holds OpenBao with an audit log that already records requests.
+
+1. Reading An Audit Record
+2. Finding Records With Hashes And Filters
+3. Following An Identity Through The Log
+4. Patterns Worth An Alert, followed by the lab **Find Who Read The Payroll Secret**
+5. Summary
+
 ## Section capstone: Move Auditing Into The Server Configuration
 
 The only audit device was enabled through the API and writes to `/tmp`, which is lost when the pod restarts, and creating audit devices through the API is still allowed. The capstone asks you to declare a device in the server configuration that writes to the audit volume, remove the old one, and turn API creation off.

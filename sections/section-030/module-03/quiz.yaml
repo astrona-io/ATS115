@@ -1,0 +1,215 @@
+# Knowledge check for module 03 of section 030. Listed in astrona.yaml as a `type: quiz` entry after the module summary.
+schema_version: 1
+kind: question_bank
+id: ats115-030-03
+course_id: ATS115
+exam_code: OPENBAO
+status: draft
+provenance: "Original practice material written for this course; not official exam questions."
+scope:
+  type: module
+  id: "section-030/module-03"
+  title: "Manage Leases And Respond To A Leaked Credential"
+placement:
+  position: after
+  reading: sections/section-030/module-03/course-05-summary.md
+questions:
+  - id: ats115-030-03-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Separate expiry from revocation"
+    source_readings:
+      - sections/section-030/module-03/course-01-the-lease-lifecycle-in-depth.md
+    prompt: "A secret reached its expire time. Is it guaranteed to be invalid at that moment?"
+    options:
+      - id: a
+        text: "Yes, it stops at the exact second."
+        explanation: "Not correct. Expiry is not immediate."
+      - id: b
+        text: "No. It can stay valid a short while, so revoke when it must stop now."
+        explanation: "Correct. Expiry is not revocation."
+      - id: c
+        text: "Yes, but only for database secrets."
+        explanation: "Not correct. The point holds for leases in general."
+    correct_option: b
+    explanation: "Correct. Expiry is not revocation."
+
+  - id: ats115-030-03-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Read the granted lease duration"
+    source_readings:
+      - sections/section-030/module-03/course-01-the-lease-lifecycle-in-depth.md
+    prompt: "Which field shows the lease time a client really got?"
+    options:
+      - id: a
+        text: "The requested `ttl` value."
+        explanation: "Not correct. It may differ from the granted value."
+      - id: b
+        text: "`renewable`"
+        explanation: "Not correct. It tells only whether renewal is possible."
+      - id: c
+        text: "`lease_duration`"
+        explanation: "Correct. The requested TTL may have been reduced."
+    correct_option: c
+    explanation: "Correct. The requested TTL may have been reduced."
+
+  - id: ats115-030-03-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Store the right value"
+    source_readings:
+      - sections/section-030/module-03/course-01-the-lease-lifecycle-in-depth.md
+    prompt: "After a lookup, what should an application keep about a lease?"
+    options:
+      - id: a
+        text: "The lease ID, not the secret."
+        explanation: "Correct. The lease ID lets it renew or revoke."
+      - id: b
+        text: "The secret value for later comparison."
+        explanation: "Not correct. Copies of secrets spread the risk."
+      - id: c
+        text: "The root token."
+        explanation: "Not correct. It must not be stored."
+    correct_option: a
+    explanation: "Correct. The lease ID lets it renew or revoke."
+
+  - id: ats115-030-03-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "List leases carefully"
+    source_readings:
+      - sections/section-030/module-03/course-01-the-lease-lifecycle-in-depth.md
+    prompt: "How should you list leases on a busy mount?"
+    options:
+      - id: a
+        text: "Always at the top of the mount."
+        explanation: "Not correct. It returns too much."
+      - id: b
+        text: "With the narrowest prefix that answers the question."
+        explanation: "Correct. A listing at the top is large and slow."
+      - id: c
+        text: "Never, because listing revokes leases."
+        explanation: "Not correct. Listing changes nothing."
+    correct_option: b
+    explanation: "Correct. A listing at the top is large and slow."
+
+  - id: ats115-030-03-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Revoke by prefix"
+    source_readings:
+      - sections/section-030/module-03/course-02-revoking-leases-and-tokens-at-scale.md
+    prompt: "What should you do before revoking leases by prefix?"
+    options:
+      - id: a
+        text: "Seal the server."
+        explanation: "Not correct. Sealing blocks everyone."
+      - id: b
+        text: "Disable the mount."
+        explanation: "Not correct. That removes the data and breaks every client."
+      - id: c
+        text: "List the prefix first."
+        explanation: "Correct. A prefix also ends leases of applications that were not part of the leak."
+    correct_option: c
+    explanation: "Correct. A prefix also ends leases of applications that were not part of the leak."
+
+  - id: ats115-030-03-q06
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Use force with care"
+    source_readings:
+      - sections/section-030/module-03/course-02-revoking-leases-and-tokens-at-scale.md
+    prompt: "Why is `-force` not a way to speed up a revocation?"
+    options:
+      - id: a
+        text: "The secret can stay valid at its source if the engine did not revoke it."
+        explanation: "Correct. Force removes the lease record regardless."
+      - id: b
+        text: "It revokes every token."
+        explanation: "Not correct. It does not widen the scope."
+      - id: c
+        text: "It needs a root token on a sealed server."
+        explanation: "Not correct. That is not what it does."
+    correct_option: a
+    explanation: "Correct. Force removes the lease record regardless."
+
+  - id: ats115-030-03-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Keep children alive"
+    source_readings:
+      - sections/section-030/module-03/course-02-revoking-leases-and-tokens-at-scale.md
+    prompt: "How do you revoke a parent token and keep its children?"
+    options:
+      - id: a
+        text: "Use `-force`."
+        explanation: "Not correct. It does not protect children."
+      - id: b
+        text: "Use the orphan mode, or create such children as orphans."
+        explanation: "Correct. The default revokes the whole tree."
+      - id: c
+        text: "Renew the children first."
+        explanation: "Not correct. Renewal does not change the parent link."
+    correct_option: b
+    explanation: "Correct. The default revokes the whole tree."
+
+  - id: ats115-030-03-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Order a response"
+    source_readings:
+      - sections/section-030/module-03/course-03-an-incident-response-runbook.md
+    prompt: "In an incident, what comes before revocation?"
+    options:
+      - id: a
+        text: "Revoke first and contain later."
+        explanation: "Not correct. The attacker returns."
+      - id: b
+        text: "Seal the server for a single leaked token."
+        explanation: "Not correct. Sealing revokes nothing."
+      - id: c
+        text: "Contain the leak, so the attacker cannot log in again."
+        explanation: "Correct. If the secret ID still works, the attacker logs in right after the revocation."
+    correct_option: c
+    explanation: "Correct. If the secret ID still works, the attacker logs in right after the revocation."
+
+  - id: ats115-030-03-q09
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Verify a containment"
+    source_readings:
+      - sections/section-030/module-03/course-03-an-incident-response-runbook.md
+    prompt: "How do you check that a leaked token no longer works?"
+    options:
+      - id: a
+        text: "Send a request with the leaked value itself."
+        explanation: "Correct. Your own token proves nothing about the leaked value."
+      - id: b
+        text: "Send a request with your own token."
+        explanation: "Not correct. It proves nothing."
+      - id: c
+        text: "Read the policy of the leaked token."
+        explanation: "Not correct. A policy does not show validity."
+    correct_option: a
+    explanation: "Correct. Your own token proves nothing about the leaked value."
+
+  - id: ats115-030-03-q10
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Prepare before an incident"
+    source_readings:
+      - sections/section-030/module-03/course-04-prepare-before-an-incident.md
+    prompt: "Why turn on audit devices before an incident?"
+    options:
+      - id: a
+        text: "Audit devices revoke leaked tokens."
+        explanation: "Not correct. They only record."
+      - id: b
+        text: "After an incident the evidence is already missing."
+        explanation: "Correct. A device records only from the moment it is enabled."
+      - id: c
+        text: "Audit devices are required for leases."
+        explanation: "Not correct. Leases work without them."
+    correct_option: b
+    explanation: "Correct. A device records only from the moment it is enabled."

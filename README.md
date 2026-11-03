@@ -26,10 +26,10 @@ section contains:
 
 | Section | Title | Modules | Labs | Topic |
 | --- | --- | --- | --- | --- |
-| [010](sections/section-010) | Writing Policies | 1 | 1 + capstone | Policies |
-| [020](sections/section-020) | Templated Policies And Control Groups | 1 | 1 + capstone | Identity-aware policies |
-| [030](sections/section-030) | Response Wrapping And Leases | 1 | 1 + capstone | Wrapping and leases |
-| [040](sections/section-040) | Audit Devices | 1 | 1 + capstone | Audit |
+| [010](sections/section-010) | Writing Policies | 2 | 2 + capstone | Policies |
+| [020](sections/section-020) | Templated Policies And Control Groups | 2 | 2 + capstone | Identity-aware policies |
+| [030](sections/section-030) | Response Wrapping And Leases | 3 | 3 + capstone | Wrapping and leases |
+| [040](sections/section-040) | Audit Devices | 3 | 3 + capstone | Audit |
 
 The order follows a request through OpenBao. A policy decides whether the
 request is allowed at all. Identity and control groups decide whether this
@@ -43,9 +43,15 @@ and how long it stays valid. Audit devices record what happened.
 | Module | Reader | Parts | Labs |
 | --- | --- | --- | --- |
 | 010-01 | [Write Least-Privilege Policies](sections/section-010/module-01/course.md) | 3 | [lab-01](sections/section-010/module-01/labs/lab-01) |
+| 010-02 | [Manage Policies In Production](sections/section-010/module-02/course.md) | 4 | [lab-01](sections/section-010/module-02/labs/lab-01) |
 | 020-01 | [Write Identity-Aware Policies And Control Groups](sections/section-020/module-01/course.md) | 3 | [lab-01](sections/section-020/module-01/labs/lab-01) |
+| 020-02 | [Work With Entities, Aliases And Groups](sections/section-020/module-02/course.md) | 4 | [lab-01](sections/section-020/module-02/labs/lab-01) |
 | 030-01 | [Hand Over Secrets Safely And Control Their Lifetime](sections/section-030/module-01/course.md) | 3 | [lab-01](sections/section-030/module-01/labs/lab-01) |
+| 030-02 | [Choose Token Types, Lifetimes And Roles](sections/section-030/module-02/course.md) | 4 | [lab-01](sections/section-030/module-02/labs/lab-01) |
+| 030-03 | [Manage Leases And Respond To A Leaked Credential](sections/section-030/module-03/course.md) | 4 | [lab-01](sections/section-030/module-03/labs/lab-01) |
 | 040-01 | [Audit Every Request](sections/section-040/module-01/course.md) | 3 | [lab-01](sections/section-040/module-01/labs/lab-01) |
+| 040-02 | [Tune Audit Devices For Production](sections/section-040/module-02/course.md) | 4 | [lab-01](sections/section-040/module-02/labs/lab-01) |
+| 040-03 | [Investigate Incidents With The Audit Log](sections/section-040/module-03/course.md) | 4 | [lab-01](sections/section-040/module-03/labs/lab-01) |
 
 ---
 

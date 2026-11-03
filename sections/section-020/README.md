@@ -22,6 +22,16 @@ The module starts at its landing page, which also launches the playground. The p
 3. Control Groups: A Second Person Approves
 4. Summary
 
+### 2. Work With Entities, Aliases And Groups
+
+The module starts at its landing page, which also launches the playground. The playground holds OpenBao with a userpass login, entities with metadata and a small group tree.
+
+1. Entities And Aliases
+2. Groups And Policy Inheritance
+3. External Groups And Group Aliases
+4. The Template Variable Reference, followed by the lab **Scope Team Areas By Metadata And Pass Rights Down A Group Tree**
+5. Summary
+
 ## Section capstone: Make Payroll Reads Need An Approval
 
 Payroll data must only be released to the payroll team, and only after an approver agrees. The control group exists, but it names a group that does not exist, the policy sits on the wrong group, and the approvers group has no members. Work it after the module lab.

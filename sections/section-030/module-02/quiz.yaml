@@ -1,0 +1,215 @@
+# Knowledge check for module 02 of section 030. Listed in astrona.yaml as a `type: quiz` entry after the module summary.
+schema_version: 1
+kind: question_bank
+id: ats115-030-02
+course_id: ATS115
+exam_code: OPENBAO
+status: draft
+provenance: "Original practice material written for this course; not official exam questions."
+scope:
+  type: module
+  id: "section-030/module-02"
+  title: "Choose Token Types, Lifetimes And Roles"
+placement:
+  position: after
+  reading: sections/section-030/module-02/course-05-summary.md
+questions:
+  - id: ats115-030-02-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Choose a token type"
+    source_readings:
+      - sections/section-030/module-02/course-01-token-types.md
+    prompt: "Which token type cannot be renewed?"
+    options:
+      - id: a
+        text: "A batch token."
+        explanation: "Correct. An application that needs renewal fails when the TTL of a batch token ends."
+      - id: b
+        text: "A service token."
+        explanation: "Not correct. Service tokens can be renewed."
+      - id: c
+        text: "A periodic token."
+        explanation: "Not correct. A periodic token is renewed to keep it alive."
+    correct_option: a
+    explanation: "Correct. An application that needs renewal fails when the TTL of a batch token ends."
+
+  - id: ats115-030-02-q02
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Predict child revocation"
+    source_readings:
+      - sections/section-030/module-02/course-01-token-types.md
+    prompt: "A parent token is revoked. What happens to its child tokens?"
+    options:
+      - id: a
+        text: "They stay valid."
+        explanation: "Not correct. Only orphans survive."
+      - id: b
+        text: "They are revoked with it, unless they were created as orphans."
+        explanation: "Correct. Children follow the parent."
+      - id: c
+        text: "They become root tokens."
+        explanation: "Not correct. Revocation never adds rights."
+    correct_option: b
+    explanation: "Correct. Children follow the parent."
+
+  - id: ats115-030-02-q03
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Handle a root token"
+    source_readings:
+      - sections/section-030/module-02/course-01-token-types.md
+    prompt: "What is good practice for the root token after setup?"
+    options:
+      - id: a
+        text: "Keep it in the application configuration."
+        explanation: "Not correct. It must not be used by applications."
+      - id: b
+        text: "Renew it every day."
+        explanation: "Not correct. It should not stay valid."
+      - id: c
+        text: "Revoke it, and generate a new one only when needed."
+        explanation: "Correct. A long-lived root token is a risk."
+    correct_option: c
+    explanation: "Correct. A long-lived root token is a risk."
+
+  - id: ats115-030-02-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Read the granted TTL"
+    source_readings:
+      - sections/section-030/module-02/course-02-ttl-maximum-ttl-and-renewal.md
+    prompt: "A client asks for a TTL above the allowed limits. What does OpenBao do?"
+    options:
+      - id: a
+        text: "It reduces the TTL without an error. Read `lease_duration` to see the result."
+        explanation: "Correct. The requested TTL is not the granted TTL."
+      - id: b
+        text: "It refuses the request."
+        explanation: "Not correct. The value is reduced."
+      - id: c
+        text: "It grants the requested TTL."
+        explanation: "Not correct. The limits apply."
+    correct_option: a
+    explanation: "Correct. The requested TTL is not the granted TTL."
+
+  - id: ats115-030-02-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain an explicit maximum TTL"
+    source_readings:
+      - sections/section-030/module-02/course-02-ttl-maximum-ttl-and-renewal.md
+    prompt: "What happens to a token with an explicit maximum TTL that is renewed on time?"
+    options:
+      - id: a
+        text: "It lives on while it is renewed."
+        explanation: "Not correct. The maximum cannot be extended."
+      - id: b
+        text: "It ends at the maximum on schedule."
+        explanation: "Correct. The application must fetch a new token before that."
+      - id: c
+        text: "It becomes a periodic token."
+        explanation: "Not correct. Renewal does not change the type."
+    correct_option: b
+    explanation: "Correct. The application must fetch a new token before that."
+
+  - id: ats115-030-02-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Describe mount tuning"
+    source_readings:
+      - sections/section-030/module-02/course-02-ttl-maximum-ttl-and-renewal.md
+    prompt: "A mount is tuned with a shorter maximum TTL. Which tokens are affected?"
+    options:
+      - id: a
+        text: "Every existing token at once."
+        explanation: "Not correct. Tuning does not rewrite old tokens."
+      - id: b
+        text: "Only root tokens."
+        explanation: "Not correct. Tuning is not limited to root tokens."
+      - id: c
+        text: "New tokens and renewals."
+        explanation: "Correct. Old tokens do not change."
+    correct_option: c
+    explanation: "Correct. Old tokens do not change."
+
+  - id: ats115-030-02-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Limit a role with allowed_policies"
+    source_readings:
+      - sections/section-030/module-02/course-03-token-roles.md
+    prompt: "A token role leaves `allowed_policies` empty. What may the caller request?"
+    options:
+      - id: a
+        text: "Any policy the caller's own token has."
+        explanation: "Correct. The role then does not limit the rights."
+      - id: b
+        text: "No policy at all."
+        explanation: "Not correct. An empty list is not a block."
+      - id: c
+        text: "Only the default policy."
+        explanation: "Not correct. It is not limited to default."
+    correct_option: a
+    explanation: "Correct. The role then does not limit the rights."
+
+  - id: ats115-030-02-q08
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Grant a role path"
+    source_readings:
+      - sections/section-030/module-02/course-03-token-roles.md
+    prompt: "Which path should a policy give so that a caller creates tokens only through a role?"
+    options:
+      - id: a
+        text: "`auth/token/create`"
+        explanation: "Not correct. It allows tokens outside the role."
+      - id: b
+        text: "`auth/token/create/<role>`"
+        explanation: "Correct. The open path `auth/token/create` ignores the role."
+      - id: c
+        text: "`auth/token/roles/<role>`"
+        explanation: "Not correct. That path manages the role."
+    correct_option: b
+    explanation: "Correct. The open path `auth/token/create` ignores the role."
+
+  - id: ats115-030-02-q09
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Know what a write to a role keeps"
+    source_readings:
+      - sections/section-030/module-02/course-03-token-roles.md
+    prompt: "A role is written with only the fields to change. What happens to fields that are left out?"
+    options:
+      - id: a
+        text: "They are reset to defaults."
+        explanation: "Not correct. A write keeps them."
+      - id: b
+        text: "The write is refused."
+        explanation: "Not correct. A partial write is accepted."
+      - id: c
+        text: "They keep their old values."
+        explanation: "Correct. Read the role after every change."
+    correct_option: c
+    explanation: "Correct. Read the role after every change."
+
+  - id: ats115-030-02-q10
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Use limits and accessors"
+    source_readings:
+      - sections/section-030/module-02/course-04-use-limits-accessors-and-network-binding.md
+    prompt: "Why log the accessor of a token and not the token?"
+    options:
+      - id: a
+        text: "An accessor is safe to log, while a token is a credential."
+        explanation: "Correct. An accessor lets you look up or revoke, but not use the token."
+      - id: b
+        text: "An accessor can be used to log in."
+        explanation: "Not correct. Only the token logs in."
+      - id: c
+        text: "An accessor never changes."
+        explanation: "Not correct. That is not the reason."
+    correct_option: a
+    explanation: "Correct. An accessor lets you look up or revoke, but not use the token."

@@ -1,0 +1,215 @@
+# Knowledge check for module 02 of section 010. Listed in astrona.yaml as a `type: quiz` entry after the module summary.
+schema_version: 1
+kind: question_bank
+id: ats115-010-02
+course_id: ATS115
+exam_code: OPENBAO
+status: draft
+provenance: "Original practice material written for this course; not official exam questions."
+scope:
+  type: module
+  id: "section-010/module-02"
+  title: "Manage Policies In Production"
+placement:
+  position: after
+  reading: sections/section-010/module-02/course-05-summary.md
+questions:
+  - id: ats115-010-02-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Describe what a policy write does to an existing policy"
+    source_readings:
+      - sections/section-010/module-02/course-01-policy-api-and-the-default-policy.md
+    prompt: "What does a second `bao policy write` with an existing policy name do?"
+    options:
+      - id: a
+        text: "It replaces the whole policy."
+        explanation: "Correct. Policies are stored whole. There is no merge and no history."
+      - id: b
+        text: "It merges the new rules into the old ones."
+        explanation: "Not correct. Nothing is merged."
+      - id: c
+        text: "It refuses, because the name is taken."
+        explanation: "Not correct. The write succeeds and overwrites."
+    correct_option: a
+    explanation: "Correct. Policies are stored whole. There is no merge and no history."
+
+  - id: ats115-010-02-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Test a policy with a real token"
+    source_readings:
+      - sections/section-010/module-02/course-01-policy-api-and-the-default-policy.md
+    prompt: "Which command shows what a token can do on a path, with all of its policies combined?"
+    options:
+      - id: a
+        text: "`bao policy read <name>`"
+        explanation: "Not correct. It shows one policy text, not the combined result."
+      - id: b
+        text: "`bao token capabilities <token> <path>`"
+        explanation: "Correct. The answer combines every policy on the token."
+      - id: c
+        text: "`bao policy fmt <file>`"
+        explanation: "Not correct. It only reformats a file."
+    correct_option: b
+    explanation: "Correct. The answer combines every policy on the token."
+
+  - id: ats115-010-02-q03
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain what the default policy gives a token"
+    source_readings:
+      - sections/section-010/module-02/course-01-policy-api-and-the-default-policy.md
+    prompt: "What is the effect of creating a token with `-no-default-policy`?"
+    options:
+      - id: a
+        text: "The token can use every path."
+        explanation: "Not correct. Removing a policy never adds rights."
+      - id: b
+        text: "The token is created as a batch token."
+        explanation: "Not correct. The flag does not change the token type."
+      - id: c
+        text: "The token cannot look itself up or renew itself unless another policy allows it."
+        explanation: "Correct. The rules for those actions live in the default policy."
+    correct_option: c
+    explanation: "Correct. The rules for those actions live in the default policy."
+
+  - id: ats115-010-02-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Predict when a policy change takes effect"
+    source_readings:
+      - sections/section-010/module-02/course-02-what-happens-to-tokens-when-a-policy-changes.md
+    prompt: "A policy is edited while tokens that carry it already exist. When do those tokens see the change?"
+    options:
+      - id: a
+        text: "On their next request."
+        explanation: "Correct. Tokens hold policy names and OpenBao reads the current text on each request."
+      - id: b
+        text: "Only after they are renewed."
+        explanation: "Not correct. Renewal is not needed."
+      - id: c
+        text: "Only for tokens created after the edit."
+        explanation: "Not correct. Existing tokens follow the new text at once."
+    correct_option: a
+    explanation: "Correct. Tokens hold policy names and OpenBao reads the current text on each request."
+
+  - id: ats115-010-02-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Predict the effect of deleting a policy"
+    source_readings:
+      - sections/section-010/module-02/course-02-what-happens-to-tokens-when-a-policy-changes.md
+    prompt: "A policy is deleted but tokens still carry its name. What do those tokens get from it?"
+    options:
+      - id: a
+        text: "The tokens are revoked."
+        explanation: "Not correct. Deleting a policy does not revoke tokens."
+      - id: b
+        text: "No rights, and the name stays in the token."
+        explanation: "Correct. A missing policy gives nothing, and writing it again restores the rights."
+      - id: c
+        text: "The tokens keep the old rules in a cached copy."
+        explanation: "Not correct. Tokens store only names."
+    correct_option: b
+    explanation: "Correct. A missing policy gives nothing, and writing it again restores the rights."
+
+  - id: ats115-010-02-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Read the policy fields of a token lookup"
+    source_readings:
+      - sections/section-010/module-02/course-02-what-happens-to-tokens-when-a-policy-changes.md
+    prompt: "In a token lookup, which field lists rights that come from an entity or group?"
+    options:
+      - id: a
+        text: "`token_policies`"
+        explanation: "Not correct. It lists policies attached directly to the token."
+      - id: b
+        text: "`meta`"
+        explanation: "Not correct. It holds metadata, not policies."
+      - id: c
+        text: "`identity_policies`"
+        explanation: "Correct. Rights through the identity store show there, not in `token_policies`."
+    correct_option: c
+    explanation: "Correct. Rights through the identity store show there, not in `token_policies`."
+
+  - id: ats115-010-02-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Use allowed_parameters"
+    source_readings:
+      - sections/section-010/module-02/course-03-parameter-constraints-in-depth.md
+    prompt: "A rule has `allowed_parameters` with the keys `common_name` and `ttl`. A request also sends `alt_names`. What happens?"
+    options:
+      - id: a
+        text: "The request is refused, because `alt_names` is not a key in the map."
+        explanation: "Correct. Once the map exists, every parameter that is not a key is refused."
+      - id: b
+        text: "The request is accepted, because only listed keys are checked."
+        explanation: "Not correct. Unlisted parameters are refused unless the key `*` exists."
+      - id: c
+        text: "The request is accepted with `alt_names` removed."
+        explanation: "Not correct. OpenBao does not edit a request."
+    correct_option: a
+    explanation: "Correct. Once the map exists, every parameter that is not a key is refused."
+
+  - id: ats115-010-02-q08
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Combine denied and allowed parameters"
+    source_readings:
+      - sections/section-010/module-02/course-03-parameter-constraints-in-depth.md
+    prompt: "A parameter is in `denied_parameters` with an empty list and also matches the key `*` in `allowed_parameters`. What is the result?"
+    options:
+      - id: a
+        text: "The parameter is accepted, because `*` allows everything."
+        explanation: "Not correct. A denied parameter wins."
+      - id: b
+        text: "The parameter is refused, because denied wins over allowed."
+        explanation: "Correct. An empty denied list refuses the parameter completely."
+      - id: c
+        text: "The policy is rejected when it is written."
+        explanation: "Not correct. The policy is stored and the conflict is resolved at request time."
+    correct_option: b
+    explanation: "Correct. An empty denied list refuses the parameter completely."
+
+  - id: ats115-010-02-q09
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain required_parameters"
+    source_readings:
+      - sections/section-010/module-02/course-03-parameter-constraints-in-depth.md
+    prompt: "What does `required_parameters` do?"
+    options:
+      - id: a
+        text: "It sets a default value for a missing parameter."
+        explanation: "Not correct. It never adds values."
+      - id: b
+        text: "It limits the values a parameter may have."
+        explanation: "Not correct. That is the job of `allowed_parameters`."
+      - id: c
+        text: "It refuses a request that leaves out a listed parameter."
+        explanation: "Correct. The request is refused before it reaches the endpoint."
+    correct_option: c
+    explanation: "Correct. The request is refused before it reaches the endpoint."
+
+  - id: ats115-010-02-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Build a fenced policy administrator"
+    source_readings:
+      - sections/section-010/module-02/course-04-administrator-policies-and-root-protected-paths.md
+    prompt: "Which rule lets a team lead write only policies whose names start with `app-`?"
+    options:
+      - id: a
+        text: "A rule on `sys/policies/acl/app-*` with create, read, update and delete."
+        explanation: "Correct. The glob after the prefix builds the fence."
+      - id: b
+        text: "A rule on `sys/policies/acl/*` with update."
+        explanation: "Not correct. It also covers `default` and other teams."
+      - id: c
+        text: "A rule on `sys/policies/acl` with update."
+        explanation: "Not correct. That path is the list endpoint, not a policy name."
+    correct_option: a
+    explanation: "Correct. The glob after the prefix builds the fence."

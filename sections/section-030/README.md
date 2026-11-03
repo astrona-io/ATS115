@@ -24,6 +24,26 @@ The module starts at its landing page, which also launches the playground. The p
 3. Leases, Renewal And Revocation Trees, followed by the lab **Hand Over An AppRole Secret ID And Revoke One Certificate**
 4. Summary
 
+### 2. Choose Token Types, Lifetimes And Roles
+
+The module starts at its landing page, which also launches the playground. The playground holds OpenBao with a token role and policies to test against.
+
+1. Token Types
+2. TTL, Maximum TTL And Renewal
+3. Token Roles
+4. Use Limits, Accessors And Network Binding, followed by the lab **Make The Worker Role Strict**
+5. Summary
+
+### 3. Manage Leases And Respond To A Leaked Credential
+
+The module starts at its landing page, which also launches the playground. The playground holds OpenBao with an AppRole role, leases and tokens to revoke.
+
+1. The Lease Lifecycle In Depth
+2. Revoking Leases And Tokens At Scale
+3. An Incident Response Runbook
+4. Prepare Before An Incident, followed by the lab **Contain A Leaked Credential**
+5. Summary
+
 ## Section capstone: Contain A Leaked Token Tree
 
 A build orchestrator's token has leaked. It created a child token, which issued certificates, while a separate orphan token runs releases. The capstone asks you to revoke everything the leaked token created, leave the orphan alone, and make sure secret IDs can only leave OpenBao wrapped from now on.
