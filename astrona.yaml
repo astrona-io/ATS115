@@ -13,7 +13,7 @@
 training:
   id: ATS115
   title: "OpenBao: Access Control Policies, Leases & Audit Devices"
-  maturity: draft
+  maturity: alpha
   description: >
     Training material covering the Access Control Policies, Leases & Audit
     Devices domain of the OpenBao training path: path-based policies and

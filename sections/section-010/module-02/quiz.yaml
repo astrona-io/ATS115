@@ -4,7 +4,7 @@ kind: question_bank
 id: ats115-010-02
 course_id: ATS115
 exam_code: OPENBAO
-status: draft
+status: alpha
 provenance: "Original practice material written for this course; not official exam questions."
 scope:
   type: module
